@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>BrightMind ⭐</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--blue:#1a73e8;--green:#0f9d58;--red:#d93025;--orange:#e37400;--purple:#7b1fa2;--border:#dadce0;--bg:#f1f3f4;--text:#202124;--grey:#5f6368}
+html,body{height:100%;font-family:'Roboto',Arial,sans-serif;color:var(--text);font-size:14px;touch-action:manipulation;overflow:hidden}
+button,input,select,textarea{font-family:inherit}
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,#1a73e8,#1a237e,#7b1fa2);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:20px}
+.spl-ico{font-size:5rem;margin-bottom:8px}
+.spl-title{font-size:2.4rem;font-weight:700;color:#fff;margin-bottom:4px}
+.spl-title span{color:#FFD54F}
+.spl-sub{color:rgba(255,255,255,.75);font-size:.9rem;margin-bottom:30px}
+.spl-hint{color:rgba(255,255,255,.7);font-size:.85rem;margin-bottom:12px}
+.lang-row{display:flex;gap:12px}
+.lang-btn{width:130px;height:100px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#fff;font-size:.9rem;font-weight:500;transition:all .2s}
+.lang-btn:hover,.lang-btn:active{background:rgba(255,255,255,.28);transform:scale(1.05)}
+.lang-btn .flag{font-size:2.6rem}
+.screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;z-index:900}
+.screen.on{display:flex}
+#sc-name{background:linear-gradient(160deg,#1a73e8,#1a237e)}
+#sc-bg{background:linear-gradient(160deg,#0f9d58,#1a237e)}
+#sc-room{background:linear-gradient(160deg,#7b1fa2,#1a237e)}
+.sc-card{background:#fff;border-radius:12px;padding:28px 24px;text-align:center;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.sc-ico{font-size:2.8rem;display:block;margin-bottom:8px}
+.sc-card h2{font-size:1.15rem;font-weight:500;margin-bottom:5px}
+.sc-card p{color:var(--grey);font-size:.85rem;margin-bottom:16px;line-height:1.5}
+.sc-inp{width:100%;padding:12px;border:1px solid var(--border);border-radius:4px;font-size:1rem;text-align:center;outline:none;margin-bottom:10px;transition:border .2s}
+.sc-inp:focus{border-color:var(--blue);border-bottom-width:2px}
+.sc-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-size:.9rem;font-weight:500;cursor:pointer}
+.sc-btn.green{background:var(--green)}
+.sc-err{color:var(--red);font-size:.82rem;min-height:18px;margin-bottom:6px}
+.bg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.bg-opt{height:46px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .18s}
+.bg-opt.on,.bg-opt:hover{border-color:var(--blue);transform:scale(1.07)}
+#app{display:none;height:100vh;flex-direction:column}
+.topbar{height:56px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:10px;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.tb-brand{font-size:.95rem;font-weight:500;flex:1}.tb-brand em{color:var(--blue);font-style:normal}
+.stars-btn{background:#e8f0fe;color:var(--blue);border:none;border-radius:20px;padding:5px 12px;font-size:.85rem;font-weight:700;cursor:pointer}
+#ann-bar{display:none;background:#e8f0fe;border-bottom:1px solid #c5d9f8;padding:8px 14px;font-size:.84rem;color:#174ea6;flex-shrink:0}
+.cb{height:130px;background:var(--blue);flex-shrink:0;position:relative;overflow:hidden}
+.cb-grid{position:absolute;inset:0;opacity:.12;background-image:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(255,255,255,.5) 29px,rgba(255,255,255,.5) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(255,255,255,.5) 29px,rgba(255,255,255,.5) 30px)}
+.cb-info{position:absolute;bottom:0;left:0;right:0;padding:10px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.3))}
+.cb-title{font-size:1.3rem;font-weight:400;color:#fff}.cb-sub{font-size:.8rem;color:rgba(255,255,255,.85);margin-top:2px}
+.cb-av{position:absolute;top:12px;right:14px;font-size:1.8rem}
+.yr-row{background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);padding:0 12px;display:flex;height:38px;align-items:center;gap:6px;flex-shrink:0}
+.yr-chip{padding:4px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;color:var(--grey);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s}
+.yr-chip.on{background:#e8f0fe;color:var(--blue);border-color:var(--blue)}
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;transition:width .2s}
+.sidebar.closed{width:0;overflow:hidden}
+.sb-profile{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.84rem;flex-shrink:0}
+.sb-name{font-size:.875rem;font-weight:500}.sb-hp{font-size:.75rem;color:var(--orange);font-weight:700;margin-top:1px}
+.sb-nav{padding:8px 0}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 14px;border:none;background:transparent;cursor:pointer;width:100%;text-align:left;border-radius:0 20px 20px 0;margin-right:8px;transition:background .15s;font-size:.875rem;color:var(--text)}
+.sb-link:hover{background:var(--bg)}.sb-link.on{background:#e8f0fe;color:var(--blue);font-weight:500}
+.sb-sec{padding:4px 8px;font-size:.7rem;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;margin:8px 0 3px}
+.sb-ri{display:flex;align-items:center;gap:8px;padding:8px 14px;border:none;background:transparent;cursor:pointer;width:100%;text-align:left;border-radius:0 20px 20px 0;margin-right:8px;font-size:.84rem;color:var(--text);transition:background .15s}
+.sb-ri:hover{background:var(--bg)}.sb-ri.on{background:#e8f0fe;font-weight:500}
+.sb-rdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-add{display:flex;align-items:center;gap:8px;padding:8px 14px;border:none;background:transparent;cursor:pointer;width:100%;text-align:left;color:var(--grey);font-size:.84rem;transition:background .15s}
+.sb-add:hover{background:var(--bg)}
+.sb-foot{padding:10px 14px;font-size:.75rem;color:var(--grey);border-top:1px solid var(--border);margin-top:auto}
+.pages{flex:1;overflow:hidden;position:relative}
+.page{display:none;position:absolute;inset:0;overflow-y:auto;background:var(--bg)}
+.page.on{display:block}
+.wrap{padding:12px 14px 28px}
+.cl-layout{display:flex;position:absolute;inset:0}
+.tnav{width:168px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0}
+.tn-btn{display:flex;align-items:center;gap:8px;padding:9px 14px;border:none;background:transparent;cursor:pointer;width:100%;text-align:left;border-radius:0 20px 20px 0;margin-right:8px;font-size:.84rem;color:var(--grey);transition:background .15s}
+.tn-btn:hover{background:var(--bg)}.tn-btn.on{background:#e8f0fe;color:var(--blue);font-weight:500}
+.glist{flex:1;overflow-y:auto;padding:12px 12px 28px}
+.card{background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);margin-bottom:10px;overflow:hidden}
+.hw-card{cursor:pointer}.hw-card:hover{box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15)}
+.hw-top{display:flex;align-items:stretch}
+.hw-stripe{width:5px;flex-shrink:0}
+.hw-body{flex:1;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.hw-ico{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.hw-title{font-size:.9rem;font-weight:500;margin-bottom:2px}.hw-meta{font-size:.74rem;color:var(--grey)}
+.hw-exp{display:none;border-top:1px solid #f5f5f5}.hw-exp.open{display:block}
+.hw-exp-inner{padding:12px 14px;font-size:.875rem;color:var(--grey);line-height:1.65}
+.sfh{padding:14px 16px;color:#fff}.sfh h3{font-size:.95rem;font-weight:700;margin-bottom:3px}.sfh p{font-size:.82rem;opacity:.88}
+.sfb{padding:12px 14px}
+.sf-prog{height:5px;border-radius:5px;background:#f1f3f4;margin-bottom:10px;overflow:hidden}
+.sf-fill{height:100%;border-radius:5px;transition:width .4s}
+.fq{background:#fff;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.fq-text{font-size:.875rem;font-weight:500;margin-bottom:8px}
+.fq-opt{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.875rem;font-weight:500;background:#fff;text-align:left;margin-bottom:5px;transition:all .2s}
+.fq-opt:hover{border-color:var(--blue);background:#e8f0fe}
+.fq-opt.picked{border-color:var(--blue);background:#e8f0fe}
+.fq-opt.right{border-color:var(--green)!important;background:#e6f4ea!important;color:#137333!important}
+.fq-opt.wrong{border-color:var(--red)!important;background:#fce8e6!important;color:#c5221f!important}
+.fq-opt:disabled{cursor:not-allowed}
+.f-sub{width:100%;padding:12px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;color:#fff;margin-top:4px}
+.mood-row{display:flex;gap:4px}
+.mood-item{flex:1;text-align:center}
+.mood-face{width:100%;padding:8px 0;border:2px solid transparent;border-radius:8px;background:#f8f9ff;font-size:1.4rem;cursor:pointer;display:block;transition:all .2s}
+.mood-face.on,.mood-face:hover{border-color:var(--blue);background:#e8f0fe;transform:scale(1.05)}
+.mood-lbl{font-size:.6rem;color:var(--grey);margin-top:2px}
+.sec-lbl{font-size:.75rem;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.6px;padding:10px 0 7px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.gb{background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);display:flex;align-items:stretch;cursor:pointer;overflow:hidden;margin-bottom:8px;border:none;width:100%;text-align:left;transition:box-shadow .2s}
+.gb:hover{box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15)}
+.gb-s{width:5px;flex-shrink:0}.gb-b{flex:1;padding:12px 13px;display:flex;align-items:center;gap:11px}
+.gb-i{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
+.gb-n{font-size:.9rem;font-weight:500;margin-bottom:2px}.gb-d{font-size:.74rem;color:var(--grey)}
+.gb-badge{background:#fbbc04;color:#333;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:auto;flex-shrink:0}
+.t-div{display:flex;align-items:center;gap:10px;padding:12px 0 7px}
+.t-div-line{flex:1;height:1px;background:var(--border)}.t-div-name{font-size:.875rem;font-weight:500;white-space:nowrap}
+.chatbox{height:260px;overflow-y:auto;background:#f8f9ff;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.cm{max-width:82%;padding:8px 12px;border-radius:12px;font-size:.875rem;line-height:1.4}
+.cm.me{background:var(--blue);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.cm.ot{background:#e8eaf6;color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
+.cm.tc{background:var(--green);color:#fff;align-self:flex-start;border-bottom-left-radius:4px}
+.cm .sn{font-size:.7rem;font-weight:700;opacity:.75;margin-bottom:2px}
+.chat-row{display:flex;gap:8px;margin-top:8px}
+.chat-row input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:24px;font-size:.875rem;outline:none}
+.chat-row input:focus{border-color:var(--blue)}
+.chat-send{background:var(--blue);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:.9rem;flex-shrink:0}
+.me-hdr{background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(60,64,67,.3);padding:20px;text-align:center;margin-bottom:10px}
+.me-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 10px}
+.me-n{font-size:1.1rem;font-weight:500;margin-bottom:3px}.me-s{font-size:.9rem;color:var(--blue);font-weight:700;margin-bottom:8px}
+.stars-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-height:46px;overflow:hidden}
+.me-card{background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(60,64,67,.3);padding:14px;margin-bottom:10px}
+.me-ttl{font-size:.78rem;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.pi{margin-bottom:9px}.pl{display:flex;justify-content:space-between;font-size:.84rem;font-weight:500;margin-bottom:4px}
+.pb{height:6px;background:#f1f3f4;border-radius:6px;overflow:hidden}.pf{height:100%;border-radius:6px;transition:width .8s}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f8f8f8}
+.set-row:last-child{border:none}
+.set-lbl{font-size:.88rem;font-weight:500}.set-val{font-size:.78rem;color:var(--grey);margin-top:1px}
+.set-btn{padding:6px 14px;border:1px solid var(--blue);border-radius:4px;background:#fff;color:var(--blue);font-size:.8rem;cursor:pointer}
+.lang-sw{display:flex;gap:8px;margin-bottom:12px}
+.lang-sw button{flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.875rem;font-weight:500;background:#fff;color:var(--grey);transition:all .2s}
+.lang-sw button.on{border-color:var(--blue);background:#e8f0fe;color:var(--blue)}
+.fc{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15);padding:22px;text-align:center;cursor:pointer;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:12px;transition:all .2s;border:2px solid transparent}
+.fc:hover{border-color:#c5d9f8}
+.fc-nav{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.fc-nav button{flex:1;padding:9px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:.875rem;background:#fff}
+.fc-cnt{font-size:.8rem;color:var(--grey)}
+.lq{background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(60,64,67,.3);padding:14px}
+.lq-ttl{font-size:.8rem;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.lq-opt{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.875rem;font-weight:500;background:#fff;text-align:left;margin-bottom:6px;transition:all .2s}
+.lq-opt:hover{border-color:var(--blue);background:#e8f0fe}
+.lq-opt.right{border-color:var(--green)!important;background:#e6f4ea!important;color:#137333!important}
+.lq-opt.wrong{border-color:var(--red)!important;background:#fce8e6!important;color:#c5221f!important}
+.vc{background:#fff;border-radius:8px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(60,64,67,.3)}
+.vc iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.vc-info{padding:10px 14px;font-size:.875rem;font-weight:500}
+.vc-desc{font-size:.75rem;color:var(--grey);margin-top:2px}
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:flex-end;justify-content:center}
+.mov.on{display:flex}
+.modal{background:#fff;border-radius:12px 12px 0 0;width:100%;max-width:500px;padding:18px 16px 30px;max-height:88vh;overflow-y:auto;position:relative}
+.m-h{width:40px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 14px}
+.m-cl{position:absolute;top:12px;right:12px;background:var(--bg);border:none;border-radius:50%;width:32px;height:32px;font-size:.95rem;cursor:pointer;color:var(--grey)}
+.modal h2{font-size:1rem;font-weight:500;margin-bottom:12px}
+.q-bar{height:5px;background:#f1f3f4;border-radius:5px;margin-bottom:12px;overflow:hidden}
+.q-fill{height:100%;background:var(--blue);border-radius:5px;transition:width .4s}
+.q-text{font-size:.95rem;font-weight:500;padding:12px;background:#f8f9ff;border-radius:8px;margin-bottom:12px;line-height:1.5}
+.q-opts{display:flex;flex-direction:column;gap:8px}
+.q-opt{padding:12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:500;background:#fff;text-align:left;transition:all .18s}
+.q-opt:hover{border-color:var(--blue);background:#e8f0fe}
+.q-opt.right{border-color:var(--green)!important;background:#e6f4ea!important;color:#137333!important}
+.q-opt.wrong{border-color:var(--red)!important;background:#fce8e6!important;color:#c5221f!important}
+.big-eq{font-size:2rem;font-weight:700;background:#e8f0fe;padding:16px;border-radius:8px;text-align:center;color:var(--blue);margin:10px 0}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ab{padding:15px;border:2px solid var(--border);border-radius:8px;font-size:1.2rem;font-weight:700;cursor:pointer;background:#fff;transition:all .18s}
+.ab:hover{border-color:var(--blue)}
+.ab.right{border-color:var(--green)!important;background:#e6f4ea!important}
+.ab.wrong{border-color:var(--red)!important;background:#fce8e6!important}
+.result{text-align:center;padding:18px}
+.r-emo{font-size:3.5rem;display:block;margin-bottom:10px}
+.r-sc{font-size:1.5rem;font-weight:700;color:var(--blue);margin-bottom:6px}
+.play-again{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:12px}
+.spell-word{font-size:1.8rem;font-weight:700;text-align:center;letter-spacing:6px;padding:14px;background:#e8f0fe;border-radius:8px;color:var(--blue);margin:10px 0}
+.ltiles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.lt{min-width:38px;height:38px;padding:0 6px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .18s}
+.lt.used{opacity:.25;cursor:not-allowed;background:#888}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:#f1f3f4;transition:all .25s;cursor:pointer;user-select:none;font-size:.9rem;color:var(--grey)}
+.mc.face{background:#e8f0fe;border-color:var(--blue);font-size:1.8rem;color:var(--text)}
+.mc.done{background:#e6f4ea;border-color:var(--green);font-size:1.8rem;cursor:default}
+.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.tf-btn{padding:20px;border:2px solid var(--border);border-radius:12px;font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .2s}
+.tf-t{background:#e8f5e9;color:#2e7d32}.tf-f{background:#fce4ec;color:#c62828}
+.tf-btn.right{border-color:var(--green)!important;box-shadow:0 0 0 3px #e6f4ea}
+.tf-btn.wrong{border-color:var(--red)!important;opacity:.7}
+.ai-msgs{height:190px;overflow-y:auto;background:#f8f9ff;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:10px;border:1px solid var(--border)}
+.ai-m{max-width:85%;padding:7px 11px;border-radius:10px;font-size:.875rem;line-height:1.4}
+.ai-m.user{background:var(--blue);color:#fff;align-self:flex-end}
+.ai-m.bot{background:#e8eaf6;color:var(--text);align-self:flex-start}
+.ai-row{display:flex;gap:8px}
+.ai-row input{flex:1;padding:9px 13px;border:1px solid var(--border);border-radius:24px;font-size:.875rem;outline:none}
+.ai-row input:focus{border-color:var(--blue)}
+.ai-row button{background:var(--blue);color:#fff;border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:.9rem}
+#live-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:800;align-items:center;justify-content:center;padding:20px}
+#live-ov.on{display:flex}
+.lv-card{background:#fff;border-radius:16px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.lv-hdr{padding:18px;text-align:center;color:#fff}
+.lv-badge{background:rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:700;display:inline-block;margin-bottom:8px}
+.lv-title{font-size:1.1rem;font-weight:600}
+.lv-body{padding:16px}
+.le-opt{width:100%;padding:13px;border:2px solid var(--border);border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:500;background:#fff;margin-bottom:8px;text-align:left;transition:all .2s}
+.le-opt:hover{border-color:var(--blue);background:#e8f0fe}
+.le-opt.picked{border-color:var(--blue);background:#e8f0fe}
+.le-opt.right{border-color:var(--green)!important;background:#e6f4ea!important;color:#137333!important}
+.le-opt.wrong{border-color:var(--red)!important;background:#fce8e6!important;color:#c5221f!important}
+.jr-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;align-items:center;justify-content:center;padding:20px}
+.jr-ov.on{display:flex}
+.jr-box{background:#fff;border-radius:12px;padding:28px 22px;width:100%;max-width:320px;text-align:center}
+#tut{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center;padding:20px}
+#tut.on{display:flex}
+.tut-box{background:#fff;border-radius:12px;max-width:330px;width:100%;padding:28px 22px;text-align:center}
+.tut-dots{display:flex;justify-content:center;gap:6px;margin-top:14px}
+.tut-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.tut-dot.on{background:var(--blue)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:4px}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="spl-ico">🌟</div>
+  <div class="spl-title">Bright<span>Mind</span></div>
+  <div class="spl-sub">Kids Learning World</div>
+  <div class="spl-hint">Choose your language / Выберите язык</div>
+  <div class="lang-row" style="flex-wrap:wrap;justify-content:center;gap:10px;max-width:420px">
+    <button class="lang-btn" onclick="pickLang('en')"><span class="flag">🇬🇧</span>English</button>
+    <button class="lang-btn" onclick="pickLang('ru')"><span class="flag">🇷🇺</span>Русский</button>
+    <button class="lang-btn" onclick="pickLang('ky')" style="background:rgba(255,50,50,.18);border-color:rgba(255,100,100,.5)"><span class="flag">🇰🇬</span>Кыргызча</button>
+  </div>
+</div>
+<div class="screen" id="sc-name">
+  <div class="sc-card">
+    <span class="sc-ico">👤</span>
+    <h2 id="t-nh">What's your name?</h2><p id="t-np">Type your name to get started!</p>
+    <input class="sc-inp" id="name-inp" type="text" maxlength="20" autocomplete="off" onkeydown="if(event.key==='Enter')goName()">
+    <button class="sc-btn" id="t-nbtn" onclick="goName()">Let's go! 🚀</button>
+  </div>
+</div>
+<div class="screen" id="sc-bg">
+  <div class="sc-card">
+    <span class="sc-ico">🎨</span>
+    <h2 id="t-bgh">Pick your background!</h2><p id="t-bgp">Choose one you love</p>
+    <div class="bg-grid">
+      <div class="bg-opt on" data-bg="default" onclick="pickBg(this)" style="background:linear-gradient(135deg,#e0f2fe,#f0fdf4)"></div>
+      <div class="bg-opt" data-bg="space" onclick="pickBg(this)" style="background:linear-gradient(135deg,#0d0221,#1a0533)"></div>
+      <div class="bg-opt" data-bg="ocean" onclick="pickBg(this)" style="background:linear-gradient(180deg,#006994,#87ceeb)"></div>
+      <div class="bg-opt" data-bg="forest" onclick="pickBg(this)" style="background:linear-gradient(180deg,#1b5e20,#81c784)"></div>
+      <div class="bg-opt" data-bg="candy" onclick="pickBg(this)" style="background:linear-gradient(135deg,#ff80ab,#80d8ff)"></div>
+      <div class="bg-opt" data-bg="night" onclick="pickBg(this)" style="background:linear-gradient(135deg,#1a1a2e,#0f3460)"></div>
+      <div class="bg-opt" data-bg="rainbow" onclick="pickBg(this)" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77)"></div>
+      <div class="bg-opt" data-bg="sunset" onclick="pickBg(this)" style="background:linear-gradient(135deg,#f7971e,#ee0979)"></div>
+      <div class="bg-opt" data-bg="mountains" onclick="pickBg(this)" style="background:linear-gradient(180deg,#1565c0 0%,#42a5f5 25%,#e3f2fd 45%,#a5d6a7 60%,#2e7d32 100%)" title="🏔️ Kyrgyz Mountains"></div>
+    </div>
+    <button class="sc-btn green" id="t-bgbtn" onclick="goBg()">Start Learning! 🌟</button>
+  </div>
+</div>
+<div class="screen" id="sc-room">
+  <div class="sc-card">
+    <span class="sc-ico">🏫</span>
+    <h2 id="t-rh">Enter Room Code</h2><p id="t-rp">Ask your teacher for the 4-digit code</p>
+    <input class="sc-inp" id="room-inp" type="text" maxlength="4" placeholder="1234"
+      style="letter-spacing:8px;font-size:1.8rem;font-weight:700"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')goRoom()">
+    <div class="sc-err" id="room-err"></div>
+    <button class="sc-btn" id="t-rbtn" onclick="goRoom()">Join Class! 🚀</button>
+    <p id="t-rhint" style="margin-top:10px;font-size:.74rem;color:var(--grey)">Or open your teacher's link to join automatically</p>
+  </div>
+</div>
+<div id="app">
+  <div class="topbar">
+    <button style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--grey);padding:4px 8px" onclick="toggleSb()">☰</button>
+    <div class="tb-brand">🌟 Bright<em>Mind</em></div>
+    <button class="stars-btn" onclick="goPage('me')">⭐ <span id="star-num">0</span></button>
+  </div>
+  <div id="ann-bar"></div>
+  <div class="cb" id="cb">
+    <div class="cb-grid"></div>
+    <div class="cb-info"><div class="cb-title" id="cb-title">Welcome!</div><div class="cb-sub" id="cb-sub">Join a room to get started</div></div>
+    <div class="cb-av" id="cb-av">👋</div>
+  </div>
+  <div class="yr-row">
+    <button class="yr-chip on" id="yr1btn" onclick="setYr(1,this)">🐣 Year 1</button>
+    <button class="yr-chip" id="yr2btn" onclick="setYr(2,this)">🦋 Year 2</button>
+  </div>
+  <div class="layout">
+    <div class="sidebar" id="sb">
+      <div class="sb-profile">
+        <div class="sb-av" id="sb-av">?</div>
+        <div><div class="sb-name" id="sb-name">...</div><div class="sb-hp" id="sb-hp">🏆 0 HP</div></div>
+      </div>
+      <div class="sb-nav">
+        <button class="sb-link on" id="nav-home" onclick="goPage('home')"><span>🏠</span><span id="t-t1">Stream</span></button>
+        <button class="sb-link" id="nav-games" onclick="goPage('games')"><span>🎮</span><span id="t-t2">Classwork</span></button>
+        <button class="sb-link" id="nav-lang" onclick="goPage('lang')"><span>🌍</span><span id="t-t3">Language</span></button>
+        <button class="sb-link" id="nav-chat" onclick="goPage('chat')"><span>💬</span><span id="t-t4">Chat</span></button>
+        <button class="sb-link" id="nav-me" onclick="goPage('me')"><span>⭐</span><span id="t-t5">My Stars</span></button>
+      </div>
+      <div class="sb-sec" id="t-rooms">My Rooms</div>
+      <div id="sb-rooms"><div style="padding:8px 14px;font-size:.84rem;color:var(--grey)">No rooms yet</div></div>
+      <button class="sb-add" onclick="openJR()"><span style="font-size:1.1rem">＋</span><span id="t-join">Join a room</span></button>
+      <div class="sb-foot" id="sb-foot">No room</div>
+    </div>
+    <div class="pages">
+      <div class="page on" id="page-home">
+        <div class="wrap">
+          <div id="vid-sec"></div>
+          <div id="hw-sec" style="display:none"><div class="sec-lbl" id="t-hw">📚 Homework</div><div id="hw-list"></div></div>
+          <div class="sec-lbl" id="t-mood">How are you feeling?</div>
+          <div class="card" style="padding:12px;margin-bottom:12px">
+            <div class="mood-row">
+              <div class="mood-item"><button class="mood-face" onclick="setMood(this,'😄','Happy')">😄</button><div class="mood-lbl" id="t-m1">Happy</div></div>
+              <div class="mood-item"><button class="mood-face" onclick="setMood(this,'😢','Sad')">😢</button><div class="mood-lbl" id="t-m2">Sad</div></div>
+              <div class="mood-item"><button class="mood-face" onclick="setMood(this,'😴','Tired')">😴</button><div class="mood-lbl" id="t-m3">Tired</div></div>
+              <div class="mood-item"><button class="mood-face" onclick="setMood(this,'🤩','Excited')">🤩</button><div class="mood-lbl" id="t-m4">Excited</div></div>
+              <div class="mood-item"><button class="mood-face" onclick="setMood(this,'😐','OK')">😐</button><div class="mood-lbl" id="t-m5">OK</div></div>
+            </div>
+          </div>
+          <div class="sec-lbl" id="t-quick">⚡ Quick Play</div>
+          <button class="gb" onclick="openGame('quiz')"><div class="gb-s" style="background:#7b1fa2"></div><div class="gb-b"><div class="gb-i" style="background:#f3e5f5;color:#7b1fa2">❓</div><div><div class="gb-n" id="t-g1">Speed Quiz</div><div class="gb-d" id="t-gd1">Auto-continues!</div></div></div></button>
+          <button class="gb" onclick="openGame('math')"><div class="gb-s" style="background:var(--blue)"></div><div class="gb-b"><div class="gb-i" style="background:#e8f0fe;color:var(--blue)">🔢</div><div><div class="gb-n" id="t-g2">Maths Fun</div><div class="gb-d" id="t-gd2">Add & count!</div></div></div></button>
+          <button class="gb" onclick="openGame('memory')"><div class="gb-s" style="background:var(--orange)"></div><div class="gb-b"><div class="gb-i" style="background:#fbe9e7;color:var(--orange)">🎴</div><div><div class="gb-n" id="t-g3">Memory Cards</div><div class="gb-d" id="t-gd3">Match pairs!</div></div></div></button>
+        </div>
+      </div>
+      <div class="page" id="page-games">
+        <div class="cl-layout">
+          <div class="tnav" id="tnav"></div>
+          <div class="glist" id="glist"></div>
+        </div>
+      </div>
+      <div class="page" id="page-lang"><div class="wrap" id="lang-wrap"></div></div>
+      <div class="page" id="page-chat">
+        <div class="wrap">
+          <div class="card" style="overflow:hidden">
+            <div style="padding:12px 14px;border-bottom:1px solid #f5f5f5;font-size:.9rem;font-weight:500" id="t-chat">💬 Class Chat</div>
+            <div style="padding:12px 14px">
+              <div class="chatbox" id="chatbox"></div>
+              <div class="chat-row">
+                <input type="text" id="chat-inp" maxlength="200" onkeydown="if(event.key==='Enter')sendChat()" placeholder="Message...">
+                <button class="chat-send" onclick="sendChat()">➤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page" id="page-me"><div class="wrap" id="me-wrap"></div></div>
+    </div>
+  </div>
+</div>
+<div class="mov" id="gmov" onclick="if(event.target===this)closeGame()">
+  <div class="modal"><div class="m-h"></div><button class="m-cl" onclick="closeGame()">✕</button><div id="gc"></div></div>
+</div>
+<div class="jr-ov" id="jrov">
+  <div class="jr-box">
+    <div style="font-size:2.5rem;margin-bottom:8px">🏫</div>
+    <h2 style="font-size:1.1rem;font-weight:500;margin-bottom:5px" id="t-jh">Join a Room</h2>
+    <p style="color:var(--grey);font-size:.84rem;margin-bottom:14px" id="t-jp">Enter the 4-digit code from your teacher</p>
+    <input class="sc-inp" id="jr-inp" type="text" maxlength="4" placeholder="1234"
+      style="letter-spacing:8px;font-size:1.6rem;font-weight:700"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')doJR()">
+    <div class="sc-err" id="jr-err"></div>
+    <button class="sc-btn" id="t-jbtn" onclick="doJR()" style="margin-bottom:8px">Join! 🚀</button>
+    <button onclick="closeJR()" style="background:none;border:none;color:var(--grey);cursor:pointer;font-size:.875rem" id="t-jcancel">Cancel</button>
+  </div>
+</div>
+<div id="live-ov">
+  <div class="lv-card">
+    <div class="lv-hdr" id="lv-hdr" style="background:var(--blue)">
+      <div class="lv-badge">🔴 LIVE</div>
+      <div class="lv-title" id="lv-title">Live Event</div>
+    </div>
+    <div class="lv-body" id="lv-body"></div>
+  </div>
+</div>
+<div id="tut">
+  <div class="tut-box">
+    <div style="font-size:4rem;margin-bottom:10px" id="tut-ico">🌟</div>
+    <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px" id="tut-ttl"></div>
+    <div style="font-size:.88rem;color:var(--grey);line-height:1.6;margin-bottom:18px" id="tut-txt"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeTut()" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:.88rem;background:#fff;color:var(--grey)" id="tut-skip">Skip</button>
+      <button onclick="nextTut()" style="flex:2;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.9rem;font-weight:600" id="tut-next">Next →</button>
+    </div>
+    <div class="tut-dots" id="tut-dots"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const S={
+  lang:localStorage.getItem('bm_lang')||'',
+  name:localStorage.getItem('bm_name')||'',
+  bg:localStorage.getItem('bm_bg')||'default',
+  yr:parseInt(localStorage.getItem('bm_yr')||'1'),
+  stars:parseInt(localStorage.getItem('bm_stars')||'0'),
+  prog:JSON.parse(localStorage.getItem('bm_prog')||'{"math":0,"read":0,"sci":0,"quiz":0,"mem":0,"lang":0}'),
+  rooms:JSON.parse(localStorage.getItem('bm_rooms')||'[]'),
+  room:localStorage.getItem('bm_room')||''
+};
+function sv(){localStorage.setItem('bm_lang',S.lang);localStorage.setItem('bm_name',S.name);localStorage.setItem('bm_bg',S.bg);localStorage.setItem('bm_yr',String(S.yr));localStorage.setItem('bm_stars',String(S.stars));localStorage.setItem('bm_prog',JSON.stringify(S.prog));localStorage.setItem('bm_rooms',JSON.stringify(S.rooms));localStorage.setItem('bm_room',S.room);}
+function addStars(n){S.stars+=n;sv();const e=document.getElementById('star-num');if(e)e.textContent=S.stars;beep('star');}
+function addProg(k,n){S.prog[k]=Math.min(100,(S.prog[k]||0)+n);sv();}
+const TR={
+  en:{'nh':"What's your name?",'np':'Type your name!','nbtn':"Let's go! 🚀",'bgh':'Pick your background!','bgp':'Choose one','bgbtn':'Start Learning! 🌟','rh':'Enter Room Code','rp':'Ask your teacher for the 4-digit code','rbtn':'Join Class! 🚀','rhint':"Or open your teacher's link",'rerr':'Enter a valid 4-digit code!','t1':'Stream','t2':'Classwork','t3':'Language','t4':'Chat','t5':'My Stars','rooms':'My Rooms','join':'Join a room','hw':'📚 Homework','mood':'How are you feeling?','quick':'⚡ Quick Play','g1':'Speed Quiz','gd1':'Auto-continues!','g2':'Maths Fun','gd2':'Add & count!','g3':'Memory Cards','gd3':'Match pairs!','m1':'Happy','m2':'Sad','m3':'Tired','m4':'Excited','m5':'OK','chat':'💬 Class Chat','jh':'Join a Room','jp':'Enter the 4-digit code from your teacher','jbtn':'Join! 🚀','jcancel':'Cancel','stars':'stars','play-again':'Play Again! 🔄'},
+  ru:{'nh':'Как тебя зовут?','np':'Напиши своё имя!','nbtn':'Вперёд! 🚀','bgh':'Выбери фон!','bgp':'Выбери фон','bgbtn':'Начать учиться! 🌟','rh':'Введи код класса','rp':'Попроси учителя дать код','rbtn':'Войти! 🚀','rhint':'Или открой ссылку учителя','rerr':'Введи правильный 4-значный код!','t1':'Лента','t2':'Задания','t3':'Языки','t4':'Чат','t5':'Мои звёзды','rooms':'Мои классы','join':'Войти в класс','hw':'📚 Задания','mood':'Как ты себя чувствуешь?','quick':'⚡ Быстрая игра','g1':'Быстрый квиз','gd1':'Автопродолжение!','g2':'Математика','gd2':'Считай!','g3':'Карточки памяти','gd3':'Найди пары!','m1':'Счастлив','m2':'Грустно','m3':'Устал','m4':'В восторге','m5':'Нормально','chat':'💬 Чат класса','jh':'Войти в класс','jp':'Введи 4-значный код от учителя','jbtn':'Войти! 🚀','jcancel':'Отмена','stars':'звёзд','play-again':'Ещё раз! 🔄'},
+  ky:{'nh':'Атыңыз кандай?','np':'Атыңызды жазыңыз! 🎉','nbtn':'Баштайлы! 🚀','bgh':'Фонду тандаңыз!','bgp':'Жакшы көргөнүңүздү тандаңыз','bgbtn':'Үйрөнүүнү баштайлы! 🌟','rh':'Класс кодун киргизиңиз','rp':'Мугалимден 4 санды суранып алыңыз','rbtn':'Кирүү! 🚀','rhint':'Же мугалимдин шилтемесин ачыңыз','rerr':'Туура 4 санды киргизиңиз!','t1':'Агым','t2':'Тапшырмалар','t3':'Тил','t4':'Чат','t5':'Жылдызчаларым','rooms':'Менин класстарым','join':'Класска кирүү','hw':'📚 Үй тапшырма','mood':'Өзүңдү кантип сезесиң?','quick':'⚡ Тез ойын','g1':'Тез квиз','gd1':'Автоулантуу!','g2':'Математика','gd2':'Эсепте!','g3':'Эс тутум карталары','gd3':'Жупту тап!','m1':'Бактылуу','m2':'Кайгылуу','m3':'Чарчаган','m4':'Кубанычтуу','m5':'Жакшы','chat':'💬 Класс чаты','jh':'Класска кирүү','jp':'Мугалимдин 4 санын киргизиңиз','jbtn':'Кирүү! 🚀','jcancel':'Жокко чыгаруу','stars':'жылдыз','play-again':'Кайра ойнойлу! 🔄'}
+};
+const T=k=>(TR[S.lang]&&TR[S.lang][k])||TR.en[k]||k;
+function applyTr(){['nh','np','nbtn','bgh','bgp','bgbtn','rh','rp','rbtn','rhint','t1','t2','t3','t4','t5','rooms','join','hw','mood','quick','g1','gd1','g2','gd2','g3','gd3','m1','m2','m3','m4','m5','chat','jh','jp','jbtn','jcancel'].forEach(k=>{const e=document.getElementById('t-'+k);if(e)e.textContent=T(k);});}
+const BG_CSS={default:'linear-gradient(135deg,#e0f2fe,#f0fdf4)',space:'linear-gradient(135deg,#0d0221,#1a0533)',ocean:'linear-gradient(180deg,#006994,#87ceeb)',forest:'linear-gradient(180deg,#1b5e20,#81c784)',candy:'linear-gradient(135deg,#ff80ab,#80d8ff)',night:'linear-gradient(135deg,#1a1a2e,#0f3460)',rainbow:'linear-gradient(135deg,#ff6b6b,#ffd93d,#6bcb77)',sunset:'linear-gradient(135deg,#f7971e,#ee0979)',mountains:'linear-gradient(180deg,#1565c0 0%,#42a5f5 25%,#e3f2fd 45%,#fffde7 50%,#a5d6a7 60%,#2e7d32 80%,#1b5e20 100%)'};
+function applyBg(){document.body.style.background=BG_CSS[S.bg]||BG_CSS.default;}
+let _selBg='default';
+function pickLang(l){S.lang=l;sv();document.getElementById('splash').style.display='none';applyTr();showSc('sc-name');setTimeout(()=>document.getElementById('name-inp').focus(),100);}
+function showSc(id){['sc-name','sc-bg','sc-room'].forEach(s=>document.getElementById(s).classList.remove('on'));document.getElementById(id).classList.add('on');}
+function goName(){const v=(document.getElementById('name-inp').value||'').trim();if(!v){document.getElementById('name-inp').focus();return;}S.name=v;sv();showSc('sc-bg');}
+function pickBg(el){document.querySelectorAll('.bg-opt').forEach(e=>e.classList.remove('on'));el.classList.add('on');_selBg=el.dataset.bg;}
+function goBg(){S.bg=_selBg;sv();applyBg();showSc('sc-room');setTimeout(()=>document.getElementById('room-inp').focus(),100);}
+async function goRoom(){
+  const v=(document.getElementById('room-inp').value||'').trim();
+  if(v.length!==4){document.getElementById('room-err').textContent=T('rerr');return;}
+  const btn=document.getElementById('t-rbtn');btn.textContent='...';document.getElementById('room-err').textContent='';
+  try{
+    const res=await fetch('/api/rooms/'+v);const d=await res.json();
+    if(!d.ok){document.getElementById('room-err').textContent='❌ '+(d.error||T('rerr'));btn.textContent=T('rbtn');return;}
+    document.getElementById('sc-room').classList.remove('on');
+    addRoom(v,d.room.name,d.room.color);
+    startApp();
+  }catch(e){document.getElementById('room-err').textContent='❌ Cannot connect to server';btn.textContent=T('rbtn');}
+}
+function addRoom(code,name,color){
+  S.room=code;
+  if(!S.rooms.find(r=>r.code===code))S.rooms.push({code,name:name||'Classroom',color:color||'#1a73e8'});
+  sv();renderRooms();
+}
+function renderRooms(){
+  const el=document.getElementById('sb-rooms');if(!el)return;
+  if(!S.rooms.length){el.innerHTML='<div style="padding:8px 14px;font-size:.84rem;color:var(--grey)">No rooms yet</div>';return;}
+  el.innerHTML=S.rooms.map(r=>`<button class="sb-ri ${S.room===r.code?'on':''}" onclick="switchRoom('${r.code}')"><div class="sb-rdot" style="background:${r.color||'#1a73e8'}"></div><div><div style="font-size:.84rem;font-weight:500">${r.name}</div><div style="font-size:.72rem;color:var(--grey)">${r.code}</div></div></button><button onclick="leaveRoom('${r.code}')" style="background:none;border:none;color:#ccc;font-size:.72rem;cursor:pointer;padding:0 14px 5px;display:block">✕ Leave</button>`).join('');
+}
+function switchRoom(code){S.room=code;sv();renderRooms();if(_pt)clearInterval(_pt);doPoll();_pt=setInterval(doPoll,2500);}
+function leaveRoom(code){if(!confirm('Leave?'))return;S.rooms=S.rooms.filter(r=>r.code!==code);if(S.room===code)S.room=S.rooms[0]?.code||'';sv();renderRooms();if(S.room)switchRoom(S.room);}
+function openJR(){document.getElementById('jr-inp').value='';document.getElementById('jr-err').textContent='';document.getElementById('jrov').classList.add('on');setTimeout(()=>document.getElementById('jr-inp').focus(),100);}
+function closeJR(){document.getElementById('jrov').classList.remove('on');}
+async function doJR(){
+  const v=(document.getElementById('jr-inp').value||'').trim();
+  if(v.length!==4){document.getElementById('jr-err').textContent=T('rerr');return;}
+  document.getElementById('jr-err').textContent='';document.getElementById('t-jbtn').textContent='...';
+  try{
+    const res=await fetch('/api/rooms/'+v);const d=await res.json();
+    document.getElementById('t-jbtn').textContent=T('jbtn');
+    if(!d.ok){document.getElementById('jr-err').textContent='❌ '+(d.error||'Not found');return;}
+    closeJR();addRoom(v,d.room.name,d.room.color);switchRoom(v);
+  }catch(e){document.getElementById('jr-err').textContent='❌ Cannot connect';document.getElementById('t-jbtn').textContent=T('jbtn');}
+}
+let _pt=null,_lastDisco=0,_lastEvId=null,_chatHash='',_pd={};
+function startApp(){
+  applyBg();applyTr();
+  const app=document.getElementById('app');app.style.display='flex';app.style.flexDirection='column';
+  const sn=document.getElementById('sb-name');if(sn)sn.textContent=S.name;
+  const sa=document.getElementById('sb-av');if(sa)sa.textContent=(S.name||'?').slice(0,2).toUpperCase();
+  document.getElementById('star-num').textContent=S.stars;
+  renderRooms();buildGames();buildLang();buildMe();
+  if(S.room){_pt=setInterval(doPoll,2500);doPoll();}
+  if(!localStorage.getItem('bm_tut')){document.getElementById('tut').classList.add('on');_tutStep=0;renderTut();}
+}
+async function doPoll(){
+  if(!S.room)return;
+  fetch('/api/rooms/'+S.room+'/students',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:S.name,lang:S.lang,yr:S.yr,stars:S.stars,prog:S.prog,hp:0,lastSeen:Date.now()/1000})}).catch(()=>{});
+  try{const res=await fetch('/api/rooms/'+S.room+'/poll');if(!res.ok)return;const d=await res.json();if(!d.ok)return;_pd=d;applyPoll(d);}catch(e){}
+}
+function applyPoll(d){
+  const cb=document.getElementById('cb');if(cb){cb.style.background=d.color;cb.style.backgroundImage=`linear-gradient(135deg,${d.color},rgba(0,0,0,.28))`;}
+  const ct=document.getElementById('cb-title');if(ct)ct.textContent=d.name||'My Classroom';
+  const stus=Object.values(d.students||{}).filter(Boolean);
+  const online=stus.filter(s=>Date.now()/1000-(s.last_seen||s.lastSeen||0)<30).length;
+  const cs=document.getElementById('cb-sub');if(cs)cs.textContent=`${S.name} · Code ${S.room} · ${online} online`;
+  const mr=S.rooms.find(r=>r.code===S.room);if(mr&&d.name){mr.name=d.name;mr.color=d.color;sv();renderRooms();}
+  const sf=document.getElementById('sb-foot');const me=d.students?.[S.name];const myHP=me?.hp||0;
+  if(sf)sf.textContent=`Room ${S.room} · 🏆 ${myHP} HP`;
+  const sh=document.getElementById('sb-hp');if(sh)sh.textContent=`🏆 ${myHP} HP`;
+  const av=document.getElementById('cb-av');if(av&&!av.dataset.set){const emojis=['😄','🌟','🎉','🌈','🦋','🚀','🤩','💪'];av.textContent=emojis[Math.floor(Math.random()*emojis.length)];av.dataset.set='1';}
+  const ab=document.getElementById('ann-bar');if(ab){if(d.announcement){ab.textContent='📢 '+d.announcement;ab.style.display='block';}else ab.style.display='none';}
+  renderHW(d.homework||[]);renderVids(d.media||[]);renderChat(d.chat||[]);
+  if(d.disco&&d.disco>0){if(_lastDisco===0)_lastDisco=d.disco;else if(d.disco>_lastDisco&&Date.now()/1000-d.disco<30){_lastDisco=d.disco;doDisco();}}
+  if(d.active_event){if(d.active_event.id!==_lastEvId){_lastEvId=d.active_event.id;showEvent(d.active_event);}}
+  else{_lastEvId=null;document.getElementById('live-ov').classList.remove('on');}
+  buildHPSec(stus,myHP);
+}
+const TCOLORS={blue:'#1a73e8',green:'#0f9d58',purple:'#7b1fa2',orange:'#e37400',red:'#d93025'};
+const HCOLORS={'📐 Maths':'#1a73e8','📖 Reading':'#0f9d58','🔬 Science':'#7b1fa2','🇬🇧 English':'#00695c','🇷🇺 Russian':'#d93025','🎨 Art':'#e65100'};
+const _fAns={};
+function renderHW(list){
+  const mine=list.filter(h=>h.year==='Both'||h.year==='Y'+S.yr||!h.year);
+  const sec=document.getElementById('hw-sec');if(sec)sec.style.display=mine.length?'block':'none';
+  const el=document.getElementById('hw-list');if(!el)return;
+  el.innerHTML=mine.slice(0,6).map(h=>{
+    const isForm=h.type==='form';const col=TCOLORS[h.theme]||HCOLORS[h.subject]||'#1a73e8';
+    const done=h.submissions&&h.submissions[S.name];
+    return`<div class="card hw-card"><div class="hw-top" onclick="this.parentNode.querySelector('.hw-exp').classList.toggle('open')"><div class="hw-stripe" style="background:${col};min-height:54px"></div><div class="hw-body"><div class="hw-ico" style="background:${col}18;color:${col}">${isForm?'📋':'📝'}</div><div style="flex:1"><div class="hw-title">${h.title}</div><div class="hw-meta">${h.subject||''}${h.due?' · 📅 '+h.due:''}</div></div>${done?'<span style="background:#e6f4ea;color:var(--green);font-size:.72rem;padding:2px 8px;border-radius:12px;font-weight:700;white-space:nowrap">✅ Done</span>':''}</div></div><div class="hw-exp">${isForm&&h.questions?renderForm(h,done):`<div class="hw-exp-inner">${(h.instructions||'').replace(/\n/g,'<br>')}${h.due?'<br><br><strong>📅 Due: </strong>'+h.due:''}</div>`}</div></div>`;
+  }).join('');
+}
+function renderForm(hw,done){
+  const col=TCOLORS[hw.theme]||'#1a73e8';
+  if(done)return`<div style="padding:14px;text-align:center;background:#e6f4ea"><div style="font-size:2rem;margin-bottom:5px">✅</div><div style="font-weight:600;color:var(--green)">Submitted!</div><div style="font-size:.84rem;color:var(--grey);margin-top:3px">${done.score||0}/${hw.questions.length} correct · +${done.score||0} ⭐</div></div>`;
+  const ans=_fAns[hw.id]||{};const answered=Object.keys(ans).length;const total=hw.questions.length;
+  return`<div><div class="sfh" style="background:${col}"><h3>${hw.title}</h3>${hw.description?`<p>${hw.description}</p>`:''}</div><div class="sfb"><div class="sf-prog"><div class="sf-fill" style="width:${total?answered/total*100:0}%;background:${col}"></div></div><div style="font-size:.78rem;color:var(--grey);margin-bottom:10px">${answered}/${total} answered</div>${hw.questions.map((q,i)=>`<div class="fq"><div class="fq-text">${q.emoji||''} ${i+1}. ${q.text}</div>${q.options?q.options.map(o=>`<button class="fq-opt ${ans[i]===o?'picked':''}" onclick="pickAns('${hw.id}',${i},'${o.replace(/'/g,"\\'")}',this)">${o}</button>`).join(''):`<input style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:.875rem;outline:none" type="text" value="${ans[i]||''}" placeholder="${S.lang==='ru'?'Напиши ответ...':'Write answer...'}" oninput="textAns('${hw.id}',${i},this.value)">`}</div>`).join('')}<button class="f-sub" style="background:${col}" onclick="submitForm('${hw.id}')">✅ ${S.lang==='ru'?'Отправить':'Submit'}</button></div></div>`;
+}
+function pickAns(hwId,qIdx,opt,btn){if(!_fAns[hwId])_fAns[hwId]={};_fAns[hwId][qIdx]=opt;btn.parentNode.querySelectorAll('.fq-opt').forEach(b=>b.classList.remove('picked'));btn.classList.add('picked');}
+function textAns(hwId,qIdx,val){if(!_fAns[hwId])_fAns[hwId]={};_fAns[hwId][qIdx]=val;}
+async function submitForm(hwId){
+  const hw=(_pd.homework||[]).find(h=>h.id===hwId);if(!hw)return;
+  const ans=_fAns[hwId]||{};let score=0;const total=hw.questions.length;
+  hw.questions.forEach((q,i)=>{const a=ans[i]||'';if(q.correct&&a===q.correct)score++;});
+  await fetch(`/api/rooms/${S.room}/homework/${hwId}/submit`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student:S.name,answers:ans,score,total})});
+  addStars(Math.max(1,score));addProg('quiz',Math.round(score/total*20));beep('star');
+  setTimeout(()=>doPoll(),500);
+}
+function renderVids(media){
+  const el=document.getElementById('vid-sec');if(!el)return;
+  if(!media.length){el.innerHTML='';return;}
+  function ytId(u){const m=(u||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
+  el.innerHTML=`<div class="sec-lbl">📹 Videos</div>`+media.map(m=>{const id=ytId(m.url);const src=id?`https://www.youtube.com/embed/${id}`:m.url;return`<div class="vc"><iframe src="${src}" allow="accelerometer;autoplay;encrypted-media" allowfullscreen></iframe><div class="vc-info">${m.title||'Video'}<div class="vc-desc">${m.description||''}</div></div></div>`;}).join('');
+}
+function setMood(btn,emoji,name){document.querySelectorAll('.mood-face').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(S.room)fetch('/api/rooms/'+S.room+'/log',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:S.name,txt:'feels '+emoji+' '+name})}).catch(()=>{});}
+function renderChat(msgs){
+  const el=document.getElementById('chatbox');if(!el)return;
+  const h=msgs.map(m=>m.time+''+m.text).join('');if(h===_chatHash)return;_chatHash=h;
+  const wb=el.scrollHeight-el.scrollTop<=el.clientHeight+20;
+  el.innerHTML=msgs.slice(-40).map(m=>{const isMe=m.name===S.name&&m.role==='student';const isT=m.role==='teacher';return`<div class="cm ${isMe?'me':isT?'tc':'ot'}"><div class="sn">${isT?'👩 '+(S.lang==='ru'?'Учитель':'Teacher'):m.name}</div>${m.text}</div>`;}).join('');
+  if(wb)el.scrollTop=el.scrollHeight;
+}
+function sendChat(){const inp=document.getElementById('chat-inp');if(!inp||!S.room)return;const txt=inp.value.trim();if(!txt)return;fetch('/api/rooms/'+S.room+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:S.name,text:txt,role:'student'})}).catch(()=>{});inp.value='';setTimeout(doPoll,500);}
+function goPage(p){['home','games','lang','chat','me'].forEach(x=>{document.getElementById('page-'+x)?.classList.remove('on');document.getElementById('nav-'+x)?.classList.remove('on');});document.getElementById('page-'+p)?.classList.add('on');document.getElementById('nav-'+p)?.classList.add('on');if(p==='games')buildGames();if(p==='lang')buildLang();if(p==='me')buildMe();if(p==='chat')renderChat(_pd.chat||[]);}
+function setYr(yr,btn){S.yr=yr;sv();document.querySelectorAll('.yr-chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');renderHW(_pd.homework||[]);}
+function toggleSb(){document.getElementById('sb').classList.toggle('closed');}
+const TOPICS=[
+  {id:'all',label:'📚 All',games:['quiz','math','times','memory','spelling','science','tf','nb','geo','animal','scramble','flag','color','fastmath','pattern','ai']},
+  {id:'maths',label:'🔢 Maths',games:['math','times','nb','fastmath','pattern']},
+  {id:'words',label:'📖 Words',games:['spelling','tf','scramble']},
+  {id:'science',label:'🔬 Science',games:['science','animal','color']},
+  {id:'geo',label:'🌍 Geography',games:['geo','flag']},
+  {id:'quiz',label:'❓ Quizzes',games:['quiz','tf','geo','animal','flag','color']},
+  {id:'fun',label:'🎮 Fun',games:['memory','scramble','fastmath','pattern','ai']},
+];
+const GAMES=[
+  {id:'quiz',n:{en:'Speed Quiz',ru:'Быстрый квиз',ky:'Тез квиз'},d:{en:'25 Qs, auto-continues!',ru:'25 вопросов!',ky:'25 суроо!'},i:'❓',c:'#7b1fa2',b:'#f3e5f5'},
+  {id:'math',n:{en:'Maths Fun',ru:'Математика',ky:'Математика'},d:{en:'Add & subtract!',ru:'Сложи и вычти!',ky:'Кош жана алып сал!'},i:'🔢',c:'#1a73e8',b:'#e8f0fe'},
+  {id:'times',n:{en:'Times Tables',ru:'Таблица умножения',ky:'Көбөйтүү таблицасы'},d:{en:'Rocket maths!',ru:'Ракетная математика!',ky:'Ракета математика!'},i:'🚀',c:'#00acc1',b:'#e0f7fa',badge:'Y2'},
+  {id:'fastmath',n:{en:'Fast Maths!',ru:'Быстрая математика!',ky:'Тез математика!'},d:{en:'30 seconds — go go go!',ru:'30 секунд — давай!',ky:'30 секунд — тез!'},i:'⚡',c:'#e53935',b:'#ffebee'},
+  {id:'spelling',n:{en:'Spelling Bee',ru:'Орфография',ky:'Жазуу'},d:{en:'Spell it right!',ru:'Напиши правильно!',ky:'Туура жаз!'},i:'🐝',c:'#d93025',b:'#fce8e6'},
+  {id:'scramble',n:{en:'Word Scramble',ru:'Собери слово',ky:'Сөз түз'},d:{en:'Unscramble the letters!',ru:'Собери буквы!',ky:'Тамгаларды тарт!'},i:'🔤',c:'#5c6bc0',b:'#e8eaf6'},
+  {id:'memory',n:{en:'Memory Cards',ru:'Карточки памяти',ky:'Эс тутум карталары'},d:{en:'Flip & match!',ru:'Найди пары!',ky:'Жупту тап!'},i:'🎴',c:'#e65100',b:'#fbe9e7'},
+  {id:'pattern',n:{en:'Number Pattern',ru:'Что дальше?',ky:'Андан кийин?'},d:{en:'What comes next?',ru:'Что идёт дальше?',ky:'Эмне келет?'},i:'🧩',c:'#6a1b9a',b:'#f3e5f5'},
+  {id:'science',n:{en:'Science Facts',ru:'Наука',ky:'Илим'},d:{en:'Explore & learn!',ru:'Исследуй!',ky:'Изилде!'},i:'🔬',c:'#0f9d58',b:'#e6f4ea'},
+  {id:'tf',n:{en:'True or False',ru:'Правда или Ложь',ky:'Туура же туура эмес'},d:{en:'Quick T/F — auto!',ru:'Быстро!',ky:'Тез!'},i:'✓',c:'#c62828',b:'#fce4ec'},
+  {id:'nb',n:{en:'Number Bonds',ru:'Числовые связи',ky:'Сан байланышы'},d:{en:'Missing number!',ru:'Найди число!',ky:'Санды тап!'},i:'🔗',c:'#00838f',b:'#e0f7fa'},
+  {id:'color',n:{en:'Colour Quiz',ru:'Цвета',ky:'Түстөр'},d:{en:'Mix colours!',ru:'Смешай цвета!',ky:'Түстөрдү аралаш!'},i:'🎨',c:'#f06292',b:'#fce4ec'},
+  {id:'geo',n:{en:'Geography Quiz',ru:'География',ky:'География'},d:{en:'Countries & capitals!',ru:'Страны и столицы!',ky:'Өлкөлөр жана борборлор!'},i:'🌍',c:'#2e7d32',b:'#e8f5e9'},
+  {id:'flag',n:{en:'Flag Quiz',ru:'Флаги стран',ky:'Туулар'},d:{en:'Guess the country!',ru:'Угадай страну!',ky:'Өлкөнү тап!'},i:'🚩',c:'#1565c0',b:'#e3f2fd'},
+  {id:'animal',n:{en:'Animal Facts',ru:'Животные',ky:'Жаныбарлар'},d:{en:'Weird & wonderful!',ru:'Удивительные факты!',ky:'Укмуштуу фактылар!'},i:'🦁',c:'#e65100',b:'#fbe9e7'},
+  {id:'ai',n:{en:'Ask Buddy AI',ru:'Спроси Бадди',ky:'Баддиге сура'},d:{en:'Ask me anything!',ru:'Задай вопрос!',ky:'Суроо бер!'},i:'🤖',c:'#00695c',b:'#e0f2f1'},
+];
+let _curT='all';
+function buildGames(){
+  const tn=document.getElementById('tnav');if(!tn)return;
+  tn.innerHTML=TOPICS.map(t=>`<button class="tn-btn ${_curT===t.id?'on':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join('');
+  renderGList();
+}
+function setTopic(id){_curT=id;document.querySelectorAll('.tn-btn').forEach((b,i)=>b.classList.toggle('on',TOPICS[i].id===id));renderGList();}
+function renderGList(){
+  const el=document.getElementById('glist');if(!el)return;
+  const t=TOPICS.find(t=>t.id===_curT)||TOPICS[0];
+  const games=GAMES.filter(g=>t.games.includes(g.id));
+  el.innerHTML=games.map(g=>`<button class="gb" onclick="openGame('${g.id}')"><div class="gb-s" style="background:${g.c}"></div><div class="gb-b"><div class="gb-i" style="background:${g.b};color:${g.c}">${g.i}</div><div><div class="gb-n">${g.n[S.lang]||g.n.en}</div><div class="gb-d">${g.d[S.lang]||g.d.en}</div></div>${g.badge?`<span class="gb-badge">${g.badge}</span>`:''}</div></button>`).join('');
+}
+function openGame(type){document.getElementById('gmov').classList.add('on');document.getElementById('gc').innerHTML='';const fn={quiz:startQuiz,math:startMath,times:startTimes,memory:startMemory,spelling:startSpelling,science:startScience,tf:startTF,nb:startNB,geo:startGeo,animal:startAnimal,ai:startAI};if(fn[type])fn[type]();}
+function closeGame(){document.getElementById('gmov').classList.remove('on');document.getElementById('gc').innerHTML='';}
+function G(){return document.getElementById('gc');}
+function showResult(emo,sc,tot,stars,fn){addStars(stars);const el=G();if(!el)return;el.innerHTML=`<div class="result"><span class="r-emo">${emo}</span><div class="r-sc">${sc}${tot?'/'+tot:''}</div><div style="color:var(--grey);margin-bottom:4px">+${stars} ⭐</div><button class="play-again" onclick="(${fn.toString()})()">${T('play-again')}</button></div>`;}
+const QEN=[{q:'What is 5 + 7?',a:'12',o:['10','11','12','13']},{q:'What colour is the sky?',a:'Blue',o:['Red','Blue','Green','Yellow']},{q:'How many legs does a spider have?',a:'8',o:['4','6','8','10']},{q:'What is 9 - 4?',a:'5',o:['3','4','5','6']},{q:'Which animal says "meow"?',a:'Cat',o:['Dog','Cat','Cow','Bird']},{q:'What is 3 × 4?',a:'12',o:['8','10','12','14']},{q:'How many days in a week?',a:'7',o:['5','6','7','8']},{q:'Capital of England?',a:'London',o:['Paris','London','Berlin','Rome']},{q:'Sides on a triangle?',a:'3',o:['2','3','4','5']},{q:'What is 20 ÷ 4?',a:'5',o:['4','5','6','7']},{q:'Closest planet to the Sun?',a:'Mercury',o:['Venus','Earth','Mercury','Mars']},{q:'What is 8 + 6?',a:'14',o:['12','13','14','15']},{q:'Months in a year?',a:'12',o:['10','11','12','13']},{q:'Red + Blue = ?',a:'Purple',o:['Green','Orange','Purple','Brown']},{q:'What is 15 - 8?',a:'7',o:['5','6','7','8']},{q:'Sides on a square?',a:'4',o:['3','4','5','6']},{q:'What is 4 × 5?',a:'20',o:['15','18','20','25']},{q:'Largest animal?',a:'Blue Whale',o:['Elephant','Blue Whale','Giraffe','Shark']},{q:'Hours in a day?',a:'24',o:['12','20','24','48']},{q:'What is 6 × 7?',a:'42',o:['36','40','42','48']},{q:'Centimetres in a metre?',a:'100',o:['10','50','100','1000']},{q:'Season after summer?',a:'Autumn',o:['Spring','Winter','Autumn','Summer']},{q:'What is 100 - 37?',a:'63',o:['53','63','67','73']},{q:'How many teeth do adults have?',a:'32',o:['24','28','32','36']},{q:'What do plants need to grow?',a:'Sunlight',o:['Milk','Sunlight','Juice','Sand']},
+  {q:'Which country has the Eiffel Tower?',a:'France',o:['Italy','France','Spain','Germany']},
+  {q:'How many sides does a hexagon have?',a:'6',o:['4','5','6','7']},
+  {q:'Fastest land animal?',a:'Cheetah',o:['Lion','Horse','Cheetah','Leopard']},
+  {q:'What is 9 x 9?',a:'81',o:['72','81','90','99']},
+  {q:'Biggest planet?',a:'Jupiter',o:['Saturn','Jupiter','Neptune','Uranus']},
+  {q:'Yellow + Blue = ?',a:'Green',o:['Purple','Green','Orange','Brown']},
+  {q:'Legs on an insect?',a:'6',o:['4','6','8','10']},
+  {q:'144 divided by 12?',a:'12',o:['10','11','12','13']},
+  {q:'Which ocean is between America and Europe?',a:'Atlantic',o:['Pacific','Atlantic','Indian','Arctic']},
+  {q:'Gas humans breathe out?',a:'Carbon dioxide',o:['Oxygen','Nitrogen','Carbon dioxide','Helium']},
+  {q:'Seconds in a minute?',a:'60',o:['30','60','100','120']},
+  {q:'Flag with maple leaf?',a:'Canada',o:['USA','Canada','Australia','Japan']},
+  {q:'Boiling point of water?',a:'100 degrees',o:['50 degrees','80 degrees','100 degrees','150 degrees']},
+  {q:'How many players in football team?',a:'11',o:['9','10','11','12']}];
+const QRU=[{q:'Сколько 5 + 7?',a:'12',o:['10','11','12','13']},{q:'Какого цвета небо?',a:'Синее',o:['Красное','Синее','Зелёное','Жёлтое']},{q:'Сколько ног у паука?',a:'8',o:['4','6','8','10']},{q:'Сколько 9 - 4?',a:'5',o:['3','4','5','6']},{q:'Кто говорит "мяу"?',a:'Кошка',o:['Собака','Кошка','Корова','Птица']},{q:'Сколько 3 × 4?',a:'12',o:['8','10','12','14']},{q:'Дней в неделе?',a:'7',o:['5','6','7','8']},{q:'Сторон у треугольника?',a:'3',o:['2','3','4','5']},{q:'Сколько 20 ÷ 4?',a:'5',o:['4','5','6','7']},{q:'Месяцев в году?',a:'12',o:['10','11','12','13']},{q:'Сколько 8 + 6?',a:'14',o:['12','13','14','15']},{q:'Красный + синий = ?',a:'Фиолетовый',o:['Зелёный','Оранжевый','Фиолетовый','Коричневый']},{q:'Сколько 15 - 8?',a:'7',o:['5','6','7','8']},{q:'Самое большое животное?',a:'Синий кит',o:['Слон','Синий кит','Жираф','Акула']},{q:'Часов в сутках?',a:'24',o:['12','20','24','48']},{q:'Сколько 6 × 7?',a:'42',o:['36','40','42','48']},{q:'Сантиметров в метре?',a:'100',o:['10','50','100','1000']},
+  {q:'В какой стране Эйфелева башня?',a:'Франция',o:['Италия','Франция','Испания','Германия']},
+  {q:'Сколько сторон у шестиугольника?',a:'6',o:['4','5','6','7']},
+  {q:'Самое быстрое животное на суше?',a:'Гепард',o:['Лев','Лошадь','Гепард','Леопард']},
+  {q:'Сколько 9 x 9?',a:'81',o:['72','81','90','99']},
+  {q:'Самая большая планета?',a:'Юпитер',o:['Сатурн','Юпитер','Нептун','Уран']},
+  {q:'Жёлтый + синий = ?',a:'Зелёный',o:['Фиолетовый','Зелёный','Оранжевый','Коричневый']},
+  {q:'Сколько ног у насекомого?',a:'6',o:['4','6','8','10']},
+  {q:'Какой газ выдыхают люди?',a:'Углекислый газ',o:['Кислород','Азот','Углекислый газ','Гелий']},
+  {q:'Сколько секунд в минуте?',a:'60',o:['30','60','100','120']},
+  {q:'Флаг с кленовым листом?',a:'Канада',o:['США','Канада','Австралия','Япония']},
+  {q:'Сколько игроков в футбольной команде?',a:'11',o:['9','10','11','12']},
+  {q:'Кыргызстандын борбор шаары?',a:'Бишкек',o:['Алматы','Бишкек','Ош','Нарын']}];
+let _qP,_qI,_qS,_qT=10;
+function startQuiz(){const p=(S.lang==='ru'?QRU:QEN).slice().sort(()=>Math.random()-.5);_qP=p.slice(0,_qT);_qI=0;_qS=0;showQ();}
+function showQ(){const el=G();if(!el)return;if(_qI>=_qP.length){addProg('quiz',15);showResult(_qS>=8?'🏆':_qS>=5?'🌟':'💪',_qS,_qT,Math.max(1,Math.floor(_qS/2)),startQuiz);return;}const q=_qP[_qI];const opts=[...q.o].sort(()=>Math.random()-.5);el.innerHTML=`<h2>❓ Quiz <span style="font-size:.8rem;color:var(--grey)">${_qI+1}/${_qT}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_qI/_qT*100}%"></div></div><div class="q-text">${q.q}</div><div class="q-opts">${opts.map(o=>`<button class="q-opt" onclick="ansQ(this,'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;}
+function ansQ(btn,sel,correct){if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('right');});if(ok)_qS++;beep(ok?'correct':'wrong');_qI++;setTimeout(showQ,1300);}
+let _mI,_mS,_mT=10;
+function startMath(){_mI=0;_mS=0;showMath();}
+function showMath(){const el=G();if(!el)return;if(_mI>=_mT){addProg('math',15);showResult(_mS>=8?'🏆':'🌟',_mS,_mT,Math.max(1,Math.floor(_mS/2)),startMath);return;}const ops=['+','-','×'];const op=ops[Math.floor(Math.random()*3)];let a,b,ans;if(op==='+'){a=Math.floor(Math.random()*20)+1;b=Math.floor(Math.random()*20)+1;ans=a+b;}else if(op==='-'){a=Math.floor(Math.random()*25)+5;b=Math.floor(Math.random()*a)+1;ans=a-b;}else{a=Math.floor(Math.random()*9)+2;b=Math.floor(Math.random()*9)+2;ans=a*b;}const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*10)-5;if(w>0&&w!==ans)wr.add(w);}const opts=[ans,...wr].sort(()=>Math.random()-.5);el.innerHTML=`<h2>🔢 Maths <span style="font-size:.8rem;color:var(--grey)">${_mI+1}/${_mT}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_mI/_mT*100}%"></div></div><div class="big-eq">${a} ${op} ${b} = ?</div><div class="ag">${opts.map(o=>`<button class="ab" onclick="ansM(this,${o},${ans})">${o}</button>`).join('')}</div>`;}
+function ansM(btn,sel,ans){if(btn.disabled)return;G().querySelectorAll('.ab').forEach(b=>b.disabled=true);const ok=sel===ans;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.ab').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('right');});if(ok)_mS++;beep(ok?'correct':'wrong');_mI++;setTimeout(showMath,1200);}
+let _ttN,_ttI,_ttS,_ttT=10;
+function startTimes(){_ttN=Math.floor(Math.random()*10)+2;_ttI=0;_ttS=0;showTT();}
+function showTT(){const el=G();if(!el)return;if(_ttI>=_ttT){addProg('math',15);showResult(_ttS>=8?'🏆':'🌟',_ttS,_ttT,Math.max(1,Math.floor(_ttS/2)),startTimes);return;}const b=Math.floor(Math.random()*12)+1,ans=_ttN*b;const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*14)-7;if(w>0&&w!==ans)wr.add(w);}const opts=[ans,...wr].sort(()=>Math.random()-.5);el.innerHTML=`<h2>🚀 ×${_ttN} <span style="font-size:.8rem;color:var(--grey)">${_ttI+1}/${_ttT}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_ttI/_ttT*100}%"></div></div><div class="big-eq">${_ttN} × ${b} = ?</div><div class="ag">${opts.map(o=>`<button class="ab" onclick="ansTT(this,${o},${ans})">${o}</button>`).join('')}</div>`;}
+function ansTT(btn,sel,ans){if(btn.disabled)return;G().querySelectorAll('.ab').forEach(b=>b.disabled=true);const ok=sel===ans;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.ab').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('right');});if(ok)_ttS++;beep(ok?'correct':'wrong');_ttI++;setTimeout(showTT,1200);}
+const MEM_SETS=[['🦁','🐘','🦒','🐬','🦋','🌺','🍕','🚀'],['⭐','🎉','🍎','🌸','🎵','🏆','🔥','💎'],['🐱','🐶','🐸','🐼','🦊','🐻','🦄','🐨']];
+let _mc,_mf,_mm,_mv,_ml,_mset=0;
+function startMemory(){_mset=(_mset+1)%MEM_SETS.length;const e=MEM_SETS[_mset];_mc=[...e,...e].sort(()=>Math.random()-.5);_mf=[];_mm=[];_mv=0;_ml=false;renderMem();}
+function renderMem(){const el=G();if(!el)return;if(_mm.length===_mc.length){addProg('mem',15);beep('star');showResult('🏆',_mv+' moves','',Math.max(3,12-Math.floor(_mv/4)),startMemory);return;}el.innerHTML=`<h2>🎴 Memory <span style="font-size:.8rem;color:var(--grey)">${_mv} moves</span></h2><div style="font-size:.8rem;color:var(--grey);margin-bottom:10px">${S.lang==='ru'?'Нажми 2 карточки — найди пары!':'Tap 2 cards to find pairs!'}</div><div class="mg">${_mc.map((e,i)=>{const f=_mf.includes(i),d=_mm.includes(i);return`<div class="mc ${d?'done':f?'face':''}" onclick="flipM(${i})">${d||f?e:'?'}</div>`;}).join('')}</div>`;}
+function flipM(i){if(_ml||_mf.includes(i)||_mm.includes(i)||_mf.length>=2)return;_mf.push(i);beep('flip');if(_mf.length===2){_mv++;if(_mc[_mf[0]]===_mc[_mf[1]]){_mm.push(..._mf);_mf=[];beep('correct');renderMem();}else{renderMem();_ml=true;setTimeout(()=>{_mf=[];_ml=false;renderMem();},1000);}}else renderMem();}
+const WORDS_EN=['apple','happy','school','friend','water','house','music','flower','garden','bright','orange','purple','dragon','yellow'];
+const WORDS_RU=['яблоко','школа','друг','вода','дом','музыка','цветок','сад'];
+let _sw,_st,_sl;
+function startSpelling(){const p=S.lang==='ru'?WORDS_RU:WORDS_EN;_sw=p[Math.floor(Math.random()*p.length)];_st=[];_sl=_sw.split('').sort(()=>Math.random()-.5);showSpell();}
+function showSpell(){const el=G();if(!el)return;const d=_sw.split('').map((_,i)=>_st[i]||'_').join(' ');el.innerHTML=`<h2>🐝 Spelling</h2><div class="spell-word">${d}</div><div style="font-size:.84rem;color:var(--grey);text-align:center;margin-bottom:10px">${S.lang==='ru'?'Нажимай буквы по порядку!':'Tap letters in the right order!'}</div><div class="ltiles">${_sl.map((l,i)=>{const u=_st.includes(l+'|'+i);return`<button class="lt ${u?'used':''}" onclick="tapL('${l}',${i})" ${u?'disabled':''}>${l}</button>`;}).join('')}</div><div style="display:flex;gap:8px;justify-content:center;margin-top:10px"><button onclick="startSpelling()" style="padding:9px 18px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:#fff;font-size:.875rem">${S.lang==='ru'?'Новое слово':'New word'}</button><button onclick="_st=[];showSpell()" style="padding:9px 18px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:#fff;font-size:.875rem">${S.lang==='ru'?'Сбросить':'Reset'}</button></div>`;}
+function tapL(l,i){const k=l+'|'+i;if(_st.includes(k))return;_st.push(k);beep('click');if(_st.length===_sw.length){const g=_st.map(k=>k.split('|')[0]).join('');if(g===_sw){addStars(2);addProg('read',10);beep('star');const el=G();el.innerHTML=`<div class="result"><span class="r-emo">✅</span><div class="r-sc">${_sw}</div><div style="color:var(--grey);margin-bottom:4px">+2 ⭐</div><button class="play-again" onclick="startSpelling()">${S.lang==='ru'?'Ещё слово!':'Next word!'}</button></div>`;}else{beep('wrong');_st=[];showSpell();}}else showSpell();}
+const SCI_EN=[{f:'The Sun is a star — 150 million km from Earth! 🌟',q:'What is the Sun?',a:'A star',o:['A planet','A star','A moon','A comet']},{f:'Water covers 71% of Earth\'s surface 🌊',q:'How much of Earth is water?',a:'71%',o:['50%','60%','71%','85%']},{f:'Plants make food using sunlight — photosynthesis! 🌿',q:'How do plants make food?',a:'Photosynthesis',o:['Eating soil','Photosynthesis','Drinking juice','Breathing air']},{f:'Your heart beats ~100,000 times every day! ❤️',q:'What does the heart do?',a:'Pumps blood',o:['Makes food','Pumps blood','Filters air','Stores energy']},{f:'Sound cannot travel through space! 🚀',q:'Can sound travel in space?',a:'No',o:['Yes','No','Sometimes','Only loud sounds']}];
+const SCI_RU=[{f:'Солнце — звезда в 150 млн км от Земли! 🌟',q:'Что такое Солнце?',a:'Звезда',o:['Планета','Звезда','Луна','Комета']},{f:'Вода покрывает 71% поверхности Земли 🌊',q:'Сколько воды на Земле?',a:'71%',o:['50%','60%','71%','85%']},{f:'Растения делают еду из солнца — фотосинтез! 🌿',q:'Как растения делают еду?',a:'Фотосинтез',o:['Едят землю','Фотосинтез','Пьют сок','Дышат']},{f:'Сердце бьётся ~100 000 раз в день! ❤️',q:'Что делает сердце?',a:'Качает кровь',o:['Делает еду','Качает кровь','Фильтрует воздух','Хранит энергию']}];
+let _sciI=0;
+function startScience(){const p=S.lang==='ru'?SCI_RU:SCI_EN;_sciI=Math.floor(Math.random()*p.length);showSci();}
+function showSci(){const el=G();if(!el)return;const p=S.lang==='ru'?SCI_RU:SCI_EN;const s=p[_sciI];el.innerHTML=`<h2>🔬 Science</h2><div style="background:#e6f4ea;border-left:4px solid var(--green);padding:12px;border-radius:8px;font-size:.9rem;line-height:1.7;margin-bottom:12px">${s.f}</div><div class="q-text">${s.q}</div><div class="q-opts">${s.o.map(o=>`<button class="q-opt" onclick="ansSci(this,'${o.replace(/'/g,"\\'")}','${s.a.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;}
+function ansSci(btn,sel,correct){if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('right');});if(ok){addStars(2);addProg('sci',10);beep('correct');}else beep('wrong');const p=S.lang==='ru'?SCI_RU:SCI_EN;_sciI=(_sciI+1)%p.length;setTimeout(()=>{const e=G();if(e){const nb=document.createElement('button');nb.textContent=S.lang==='ru'?'Следующий факт →':'Next Fact →';nb.style.cssText='width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:12px';nb.onclick=showSci;e.appendChild(nb);}},900);}
+const TOF_EN=[{s:'The Earth is flat.',a:false},{s:'Fish can breathe underwater.',a:true},{s:'The Sun is a planet.',a:false},{s:'Spiders have 8 legs.',a:true},{s:'A triangle has 4 sides.',a:false},{s:'Ice is frozen water.',a:true},{s:'Elephants are the largest land animals.',a:true},{s:'The Moon makes its own light.',a:false},{s:'Plants need sunlight to grow.',a:true},{s:'Dolphins are fish.',a:false},{s:'Lightning is faster than thunder.',a:true},{s:'Water boils at 100°C.',a:true},{s:'Bats are completely blind.',a:false},{s:'Humans have 5 senses.',a:true},{s:'A square has 5 sides.',a:false},{s:'The heart is on the left side.',a:true}];
+const TOF_RU=[{s:'Земля плоская.',a:false},{s:'Рыбы дышат под водой.',a:true},{s:'Солнце — это планета.',a:false},{s:'У пауков 8 ног.',a:true},{s:'У треугольника 4 стороны.',a:false},{s:'Лёд — замёрзшая вода.',a:true},{s:'Слоны — самые большие наземные животные.',a:true},{s:'Луна сама светится.',a:false},{s:'Растениям нужен солнечный свет.',a:true},{s:'Дельфины — это рыбы.',a:false},{s:'Молния быстрее грома.',a:true},{s:'Вода кипит при 100°C.',a:true}];
+let _tfP,_tfI,_tfS,_tfT=10;
+function startTF(){const p=(S.lang==='ru'?TOF_RU:TOF_EN).slice().sort(()=>Math.random()-.5);_tfP=p.slice(0,_tfT);_tfI=0;_tfS=0;showTF();}
+function showTF(){const el=G();if(!el)return;if(_tfI>=_tfP.length){addProg('quiz',12);showResult(_tfS>=8?'🏆':_tfS>=5?'🌟':'💪',_tfS,_tfT,Math.max(1,Math.floor(_tfS/2)),startTF);return;}const q=_tfP[_tfI];el.innerHTML=`<h2>✓ ${S.lang==='ru'?'Правда или Ложь?':'True or False?'} <span style="font-size:.8rem;color:var(--grey)">${_tfI+1}/${_tfT}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_tfI/_tfT*100}%"></div></div><div style="font-size:1rem;font-weight:500;padding:20px;background:#f8f9ff;border-radius:12px;text-align:center;margin:12px 0;line-height:1.5">${q.s}</div><div class="tf-row"><button class="tf-btn tf-t" onclick="ansTF(this,true,${q.a})">✅ ${S.lang==='ru'?'ПРАВДА':'TRUE'}</button><button class="tf-btn tf-f" onclick="ansTF(this,false,${q.a})">❌ ${S.lang==='ru'?'ЛОЖЬ':'FALSE'}</button></div>`;}
+function ansTF(btn,sel,correct){if(btn.disabled)return;G().querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(ok)_tfS++;beep(ok?'correct':'wrong');_tfI++;setTimeout(showTF,1300);}
+let _nbI,_nbS,_nbT=10;
+function startNB(){_nbI=0;_nbS=0;showNB();}
+function showNB(){const el=G();if(!el)return;if(_nbI>=_nbT){addProg('math',12);showResult(_nbS>=8?'🏆':'🌟',_nbS,_nbT,Math.max(1,Math.floor(_nbS/2)),startNB);return;}const targets=[5,10,20,100];const target=targets[Math.floor(Math.random()*targets.length)];const a=Math.floor(Math.random()*(target-1))+1;const ans=target-a;const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*6)-3;if(w>0&&w!==ans&&w<=target)wr.add(w);}const opts=[ans,...wr].sort(()=>Math.random()-.5);el.innerHTML=`<h2>🔗 ${S.lang==='ru'?'Числовые связи':'Number Bonds'} <span style="font-size:.8rem;color:var(--grey)">${_nbI+1}/${_nbT}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_nbI/_nbT*100}%"></div></div><div style="text-align:center;margin:12px 0"><div style="font-size:.85rem;color:var(--grey);margin-bottom:4px">${S.lang==='ru'?'В сумме':'adds up to'}</div><div style="font-size:3rem;font-weight:700;color:var(--blue)">${target}</div></div><div class="big-eq">${a} + ? = ${target}</div><div class="ag">${opts.map(o=>`<button class="ab" onclick="ansNB(this,${o},${ans})">${o}</button>`).join('')}</div>`;}
+function ansNB(btn,sel,ans){if(btn.disabled)return;G().querySelectorAll('.ab').forEach(b=>b.disabled=true);const ok=sel===ans;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.ab').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('right');});if(ok)_nbS++;beep(ok?'correct':'wrong');_nbI++;setTimeout(showNB,1200);}
+const GEO_EN=[{q:'Capital of France?',a:'Paris',o:['London','Paris','Berlin','Rome']},{q:'Capital of England?',a:'London',o:['London','Edinburgh','Cardiff','Dublin']},{q:'Longest river in the world?',a:'The Nile',o:['Amazon','Thames','The Nile','Yangtze']},{q:'Biggest continent?',a:'Asia',o:['Africa','Asia','Europe','North America']},{q:'Capital of Russia?',a:'Moscow',o:['Moscow','St Petersburg','Kiev','Minsk']},{q:'Largest ocean?',a:'Pacific',o:['Atlantic','Indian','Arctic','Pacific']},{q:'Capital of USA?',a:'Washington D.C.',o:['New York','Los Angeles','Washington D.C.','Chicago']},{q:'Smallest country?',a:'Vatican City',o:['Monaco','Vatican City','San Marino','Liechtenstein']},{q:'Largest desert?',a:'Sahara',o:['Sahara','Gobi','Mojave','Kalahari']},{q:'Capital of Germany?',a:'Berlin',o:['Munich','Hamburg','Berlin','Frankfurt']},{q:'Big Ben is in which country?',a:'England',o:['France','England','Italy','Spain']},{q:'Most populated country?',a:'India',o:['China','India','USA','Brazil']}];
+const GEO_RU=[{q:'Столица Франции?',a:'Париж',o:['Лондон','Париж','Берлин','Рим']},{q:'Столица России?',a:'Москва',o:['Москва','Санкт-Петербург','Киев','Минск']},{q:'Самая длинная река?',a:'Нил',o:['Амазонка','Темза','Нил','Янцзы']},{q:'Самый большой континент?',a:'Азия',o:['Африка','Азия','Европа','Северная Америка']},{q:'Самый большой океан?',a:'Тихий',o:['Атлантический','Индийский','Арктический','Тихий']},{q:'Столица США?',a:'Вашингтон',o:['Нью-Йорк','Лос-Анджелес','Вашингтон','Чикаго']},{q:'Самая маленькая страна?',a:'Ватикан',o:['Монако','Ватикан','Сан-Марино','Лихтенштейн']},{q:'Столица Германии?',a:'Берлин',o:['Мюнхен','Гамбург','Берлин','Франкфурт']}];
+let _gP,_gI,_gS,_gT=10;
+function startGeo(){const p=(S.lang==='ru'?GEO_RU:GEO_EN).slice().sort(()=>Math.random()-.5);_gP=p.slice(0,Math.min(_gT,p.length));_gI=0;_gS=0;showGeo();}
+function showGeo(){const el=G();if(!el)return;if(_gI>=_gP.length){addProg('sci',12);showResult(_gS>=8?'🏆':_gS>=5?'🌟':'💪',_gS,_gP.length,Math.max(1,Math.floor(_gS/2)),startGeo);return;}const q=_gP[_gI];const opts=[...q.o].sort(()=>Math.random()-.5);el.innerHTML=`<h2>🌍 ${S.lang==='ru'?'География':'Geography'} <span style="font-size:.8rem;color:var(--grey)">${_gI+1}/${_gP.length}</span></h2><div class="q-bar"><div class="q-fill" style="width:${_gI/_gP.length*100}%"></div></div><div class="q-text">🌍 ${q.q}</div><div class="q-opts">${opts.map(o=>`<button class="q-opt" onclick="ansGeo(this,'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;}
+function ansGeo(btn,sel,correct){if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('right');});if(ok)_gS++;beep(ok?'correct':'wrong');_gI++;setTimeout(showGeo,1300);}
+const ANI_EN=[{f:'🦁 A lion\'s roar can be heard 8 km away!',q:'How far can a lion\'s roar be heard?',a:'8 km',o:['1 km','4 km','8 km','20 km']},{f:'🐘 Elephants can\'t jump!',q:'Which animal cannot jump?',a:'Elephant',o:['Horse','Elephant','Hippo','Rhino']},{f:'🦋 Butterflies taste with their feet!',q:'How do butterflies taste?',a:'With their feet',o:['Tongue','Feet','Nose','Eyes']},{f:'🐙 An octopus has 3 hearts!',q:'How many hearts does an octopus have?',a:'3',o:['1','2','3','4']},{f:'🦒 A giraffe\'s tongue is 45cm long!',q:'How long is a giraffe\'s tongue?',a:'45cm',o:['10cm','25cm','45cm','60cm']},{f:'🐢 A tortoise can live over 150 years!',q:'How long can a tortoise live?',a:'150+ years',o:['50 years','100 years','150+ years','30 years']},{f:'🐝 2000 flowers to make one jar of honey!',q:'Flowers needed for one jar of honey?',a:'2000',o:['100','500','2000','10000']},{f:'🦈 Sharks have existed for 450 million years!',q:'How old are sharks as a species?',a:'450 million years',o:['10 million','100 million','450 million','1 billion']}];
+const ANI_RU=[{f:'🦁 Рёв льва слышен на 8 км!',q:'На сколько км слышен рёв льва?',a:'8 км',o:['1 км','4 км','8 км','20 км']},{f:'🐘 Слоны не умеют прыгать!',q:'Какое животное не умеет прыгать?',a:'Слон',o:['Лошадь','Слон','Бегемот','Носорог']},{f:'🐙 У осьминога 3 сердца!',q:'Сколько сердец у осьминога?',a:'3',o:['1','2','3','4']},{f:'🦒 Язык жирафа 45 см!',q:'Длина языка жирафа?',a:'45 см',o:['10 см','25 см','45 см','60 см']},{f:'🐢 Черепаха живёт 150+ лет!',q:'Сколько живёт черепаха?',a:'150+ лет',o:['50 лет','100 лет','150+ лет','30 лет']}];
+let _aniI=0;
+function startAnimal(){_aniI=Math.floor(Math.random()*(S.lang==='ru'?ANI_RU:ANI_EN).length);showAnimal();}
+function showAnimal(){const el=G();if(!el)return;const p=S.lang==='ru'?ANI_RU:ANI_EN;const f=p[_aniI];el.innerHTML=`<h2>🦁 ${S.lang==='ru'?'Животные':'Animal Facts'}</h2><div style="background:linear-gradient(135deg,#e65100,#e65100cc);border-radius:12px;padding:14px;color:#fff;margin-bottom:12px;font-size:.9rem;line-height:1.7">${f.f}</div><div class="q-text">${f.q}</div><div class="q-opts">${f.o.map(o=>`<button class="q-opt" onclick="ansAni(this,'${o.replace(/'/g,"\\'")}','${f.a.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;}
+function ansAni(btn,sel,correct){if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('right');});if(ok){addStars(2);addProg('sci',8);beep('correct');}else beep('wrong');const p=S.lang==='ru'?ANI_RU:ANI_EN;_aniI=(_aniI+1)%p.length;setTimeout(()=>{const e=G();if(e){const nb=document.createElement('button');nb.textContent=S.lang==='ru'?'Следующий →':'Next Fact →';nb.style.cssText='width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:12px';nb.onclick=showAnimal;e.appendChild(nb);}},900);}
+let _aiM=[];
+function startAI(){_aiM=[];const el=G();if(!el)return;el.innerHTML=`<h2>🤖 ${S.lang==='ru'?'Спроси Бадди AI':'Ask Buddy AI'}</h2><div style="font-size:.84rem;color:var(--grey);margin-bottom:10px">${S.lang==='ru'?'Задай любой вопрос! 🌟':'Ask me anything! 🌟'}</div><div class="ai-msgs" id="ai-msgs"></div><div class="ai-row"><input id="ai-inp" type="text" placeholder="${S.lang==='ru'?'Напиши вопрос...':'Ask a question...'}" onkeydown="if(event.key==='Enter')sendAI()"><button onclick="sendAI()">➤</button></div>`;}
+async function sendAI(){const inp=document.getElementById('ai-inp');if(!inp)return;const msg=inp.value.trim();if(!msg)return;inp.value='';inp.disabled=true;_aiM.push({role:'user',content:msg});renderAI();try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:250,system:S.lang==='ru'?'Ты добрый помощник для детей 5-8 лет. Отвечай по-русски, просто, с эмодзи.':'You are a kind learning assistant for children aged 5-8. Simple words and emojis!',messages:_aiM})});const d=await r.json();_aiM.push({role:'assistant',content:d.content?.[0]?.text||'Oops! 😊'});}catch(e){_aiM.push({role:'assistant',content:'Oops! 😊'});}inp.disabled=false;inp.focus();renderAI();}
+function renderAI(){const el=document.getElementById('ai-msgs');if(!el)return;el.innerHTML=_aiM.map(m=>`<div class="ai-m ${m.role==='user'?'user':'bot'}">${m.content}</div>`).join('');el.scrollTop=el.scrollHeight;}
+const WDATA=[{en:'Hello',ru:'Привет',e:'👋'},{en:'Goodbye',ru:'Пока',e:'👋'},{en:'Thank you',ru:'Спасибо',e:'🙏'},{en:'Please',ru:'Пожалуйста',e:'🤲'},{en:'Yes',ru:'Да',e:'✅'},{en:'No',ru:'Нет',e:'❌'},{en:'Cat',ru:'Кошка',e:'🐱'},{en:'Dog',ru:'Собака',e:'🐶'},{en:'House',ru:'Дом',e:'🏠'},{en:'Apple',ru:'Яблоко',e:'🍎'},{en:'Water',ru:'Вода',e:'💧'},{en:'Sun',ru:'Солнце',e:'☀️'},{en:'Moon',ru:'Луна',e:'🌙'},{en:'Star',ru:'Звезда',e:'⭐'},{en:'Book',ru:'Книга',e:'📚'},{en:'School',ru:'Школа',e:'🏫'},{en:'Friend',ru:'Друг',e:'🤝'},{en:'Red',ru:'Красный',e:'🔴'},{en:'Blue',ru:'Синий',e:'🔵'},{en:'Green',ru:'Зелёный',e:'🟢'},{en:'One',ru:'Один',e:'1️⃣'},{en:'Two',ru:'Два',e:'2️⃣'},{en:'Three',ru:'Три',e:'3️⃣'},{en:'Mum',ru:'Мама',e:'👩'},{en:'Dad',ru:'Папа',e:'👨'},{en:'Happy',ru:'Счастливый',e:'😄'},{en:'Big',ru:'Большой',e:'⬆️'}];
+let _lcI=0,_lcM='en2ru',_lcF=false,_lcS=0;
+
+// ─── WORD SCRAMBLE ────────────────────────────────────────────
+const SCR_EN=['apple','banana','school','friend','dragon','purple','orange','yellow','garden','flower','bridge','castle','planet','rocket','monkey','butter','cheese','simple','jungle','winter'];
+const SCR_RU=['яблоко','банан','школа','дракон','замок','планета','ракета','обезьяна','масло','зима'];
+const SCR_KY=['мектеп','алма','жылдыз','тоолор','дарыя','батыр'];
+let _scW,_scG,_scL;
+function startScramble(){
+  const pool=S.lang==='ru'?SCR_RU:S.lang==='ky'?SCR_KY:SCR_EN;
+  _scW=pool[Math.floor(Math.random()*pool.length)];
+  _scG=[];_scL=_scW.split('').sort(()=>Math.random()-.5);
+  showScramble();
+}
+function showScramble(){
+  var el=G();if(!el)return;
+  var blanks=_scW.split('').map(function(_,i){return _scG[i]||'_';}).join(' ');
+  var tiles='';
+  for(var i=0;i<_scL.length;i++){
+    var l=_scL[i];var u=_scG.includes(l+'|'+i);
+    tiles+='<button class="lt '+(u?'used':'')+'" onclick="tapScr(\''+l+'\','+i+')" '+(u?'disabled':'')+'>'+l+'</button>';
+  }
+  var title=S.lang==='ru'?'Собери слово':S.lang==='ky'?'Сөз түз':'Word Scramble';
+  var lettersWord=S.lang==='ru'?'букв':S.lang==='ky'?'тамга':'letters';
+  var newWord=S.lang==='ru'?'Новое слово':S.lang==='ky'?'Жаңы сөз':'New Word';
+  var reset=S.lang==='ru'?'Сбросить':'Reset';
+  el.innerHTML='<h2>🔤 '+title+'</h2>'
+    +'<div style="background:#e8f0fe;border-radius:12px;padding:16px;text-align:center;margin:10px 0">'
+    +'<div style="font-size:1.5rem;font-weight:700;letter-spacing:6px;color:var(--blue);margin-bottom:8px">'+blanks+'</div>'
+    +'<div style="font-size:.8rem;color:var(--grey)">'+_scG.length+'/'+_scW.length+' '+lettersWord+'</div>'
+    +'</div>'
+    +'<div class="ltiles">'+tiles+'</div>'
+    +'<div style="display:flex;gap:8px;justify-content:center;margin-top:10px">'
+    +'<button onclick="startScramble()" style="padding:9px 16px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:#fff;font-size:.875rem">'+newWord+'</button>'
+    +'<button onclick="_scG=[];showScramble()" style="padding:9px 16px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:#fff;font-size:.875rem">'+reset+'</button>'
+    +'</div>';
+}
+function tapScr(l,i){const k=l+'|'+i;if(_scG.includes(k))return;_scG.push(k);beep('click');
+  if(_scG.length===_scW.length){const built=_scG.map(k=>k.split('|')[0]).join('');
+    if(built===_scW){addStars(3);addProg('read',12);beep('star');const el=G();el.innerHTML=`<div class="result"><span class="r-emo">✅</span><div class="r-sc">${_scW}</div><div style="color:var(--grey);margin-bottom:4px">+3 ⭐</div><button class="play-again" onclick="startScramble()">${T('play-again')}</button></div>`;}
+    else{beep('wrong');_scG=[];showScramble();}}else showScramble();}
+
+// ─── FLAG QUIZ ────────────────────────────────────────────────
+const FLAGS=[
+  {flag:'🇬🇧',name:'United Kingdom',ru:'Великобритания',ky:'Улуу Британия',o:['France','United Kingdom','Germany','Italy'],oru:['Франция','Великобритания','Германия','Италия'],oky:['Франция','Улуу Британия','Германия','Италия']},
+  {flag:'🇷🇺',name:'Russia',ru:'Россия',ky:'Россия',o:['Ukraine','Poland','Russia','Belarus'],oru:['Украина','Польша','Россия','Беларусь'],oky:['Украина','Польша','Россия','Беларусь']},
+  {flag:'🇰🇬',name:'Kyrgyzstan',ru:'Кыргызстан',ky:'Кыргызстан',o:['Kazakhstan','Uzbekistan','Kyrgyzstan','Tajikistan'],oru:['Казахстан','Узбекистан','Кыргызстан','Таджикистан'],oky:['Казакстан','Өзбекстан','Кыргызстан','Тажикстан']},
+  {flag:'🇫🇷',name:'France',ru:'Франция',ky:'Франция',o:['Spain','France','Italy','Portugal'],oru:['Испания','Франция','Италия','Португалия'],oky:['Испания','Франция','Италия','Португалия']},
+  {flag:'🇩🇪',name:'Germany',ru:'Германия',ky:'Германия',o:['Austria','Switzerland','Germany','Netherlands'],oru:['Австрия','Швейцария','Германия','Нидерланды'],oky:['Австрия','Швейцария','Германия','Нидерланды']},
+  {flag:'🇺🇸',name:'USA',ru:'США',ky:'АКШ',o:['Canada','USA','Mexico','Brazil'],oru:['Канада','США','Мексика','Бразилия'],oky:['Канада','АКШ','Мексика','Бразилия']},
+  {flag:'🇯🇵',name:'Japan',ru:'Япония',ky:'Жапония',o:['China','Korea','Japan','Vietnam'],oru:['Китай','Корея','Япония','Вьетнам'],oky:['Кытай','Корея','Жапония','Вьетнам']},
+  {flag:'🇧🇷',name:'Brazil',ru:'Бразилия',ky:'Бразилия',o:['Argentina','Brazil','Colombia','Chile'],oru:['Аргентина','Бразилия','Колумбия','Чили'],oky:['Аргентина','Бразилия','Колумбия','Чили']},
+  {flag:'🇦🇺',name:'Australia',ru:'Австралия',ky:'Австралия',o:['New Zealand','Australia','Canada','South Africa'],oru:['Новая Зеландия','Австралия','Канада','ЮАР'],oky:['Жаңы Зеландия','Австралия','Канада','ЮАР']},
+  {flag:'🇰🇿',name:'Kazakhstan',ru:'Казахстан',ky:'Казакстан',o:['Kazakhstan','Kyrgyzstan','Uzbekistan','Tajikistan'],oru:['Казахстан','Кыргызстан','Узбекистан','Таджикистан'],oky:['Казакстан','Кыргызстан','Өзбекстан','Тажикстан']},
+  {flag:'🇮🇹',name:'Italy',ru:'Италия',ky:'Италия',o:['Spain','Greece','Italy','France'],oru:['Испания','Греция','Италия','Франция'],oky:['Испания','Греция','Италия','Франция']},
+  {flag:'🇨🇳',name:'China',ru:'Китай',ky:'Кытай',o:['Japan','China','Korea','Vietnam'],oru:['Япония','Китай','Корея','Вьетнам'],oky:['Жапония','Кытай','Корея','Вьетнам']},
+];
+let _flPool,_flI,_flS,_flT=10;
+function startFlag(){const p=FLAGS.slice().sort(()=>Math.random()-.5);_flPool=p.slice(0,Math.min(_flT,p.length));_flI=0;_flS=0;showFlag();}
+function showFlag(){
+  const el=G();if(!el)return;
+  if(_flI>=_flPool.length){addProg('sci',12);showResult(_flS>=8?'🏆':_flS>=5?'🌟':'💪',_flS,_flPool.length,Math.max(1,Math.floor(_flS/2)),startFlag);return;}
+  const f=_flPool[_flI];
+  const name=S.lang==='ru'?f.ru:S.lang==='ky'?f.ky:f.name;
+  const opts=(S.lang==='ru'?f.oru:S.lang==='ky'?f.oky:f.o).slice().sort(()=>Math.random()-.5);
+  el.innerHTML=`<h2>🚩 ${S.lang==='ru'?'Флаг страны':S.lang==='ky'?'Туу':' Flag Quiz'} <span style="font-size:.8rem;color:var(--grey)">${_flI+1}/${_flPool.length}</span></h2>
+    <div class="q-bar"><div class="q-fill" style="width:${_flI/_flPool.length*100}%"></div></div>
+    <div style="text-align:center;font-size:6rem;padding:20px;background:#f8f9ff;border-radius:12px;margin:10px 0;line-height:1">${f.flag}</div>
+    <div class="q-opts">${opts.map(o=>`<button class="q-opt" onclick="ansFlag(this,'${o.replace(/'/g,"\\'")}','${name.replace(/'/g,"\\'")}','${f.name.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;
+}
+function ansFlag(btn,sel,correctLang,correctEN){
+  if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  const ok=sel===correctLang;btn.classList.add(ok?'right':'wrong');
+  if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent.trim()===correctLang)b.classList.add('right');});
+  if(ok)_flS++;beep(ok?'correct':'wrong');_flI++;setTimeout(showFlag,1300);
+}
+
+// ─── COLOUR QUIZ ─────────────────────────────────────────────
+const COL_Q={
+  en:[{q:'Red + Blue = ?',a:'Purple',o:['Green','Orange','Purple','Brown']},{q:'Yellow + Blue = ?',a:'Green',o:['Purple','Green','Orange','Pink']},{q:'Red + Yellow = ?',a:'Orange',o:['Purple','Orange','Green','Brown']},{q:'Red + White = ?',a:'Pink',o:['Purple','Pink','Orange','Grey']},{q:'Black + White = ?',a:'Grey',o:['Purple','Grey','Brown','Beige']},{q:'Yellow + Red + Blue = ?',a:'Brown',o:['Purple','Brown','Black','Grey']},{q:'Blue + Green = ?',a:'Teal',o:['Purple','Teal','Cyan','Navy']},{q:'What colour is a banana?',a:'Yellow',o:['Red','Yellow','Green','Blue']},{q:'What colour is the sky?',a:'Blue',o:['Blue','Green','Purple','Yellow']},{q:'What colour is grass?',a:'Green',o:['Blue','Yellow','Green','Brown']}],
+  ru:[{q:'Красный + синий = ?',a:'Фиолетовый',o:['Зелёный','Оранжевый','Фиолетовый','Коричневый']},{q:'Жёлтый + синий = ?',a:'Зелёный',o:['Фиолетовый','Зелёный','Оранжевый','Розовый']},{q:'Красный + жёлтый = ?',a:'Оранжевый',o:['Фиолетовый','Оранжевый','Зелёный','Коричневый']},{q:'Красный + белый = ?',a:'Розовый',o:['Фиолетовый','Розовый','Оранжевый','Серый']},{q:'Чёрный + белый = ?',a:'Серый',o:['Фиолетовый','Серый','Коричневый','Бежевый']},{q:'Какого цвета банан?',a:'Жёлтый',o:['Красный','Жёлтый','Зелёный','Синий']},{q:'Какого цвета трава?',a:'Зелёный',o:['Синий','Жёлтый','Зелёный','Коричневый']},{q:'Какого цвета небо?',a:'Синий',o:['Синий','Зелёный','Фиолетовый','Жёлтый']}],
+  ky:[{q:'Кызыл + көк = ?',a:'Күрөң-кызгылт',o:['Жашыл','Кызгылт','Күрөң-кызгылт','Күрөң']},{q:'Сары + көк = ?',a:'Жашыл',o:['Күрөң-кызгылт','Жашыл','Кызгылт','Кызгыл']},{q:'Банан кандай түстө?',a:'Сары',o:['Кызыл','Сары','Жашыл','Көк']},{q:'Асман кандай түстө?',a:'Көк',o:['Көк','Жашыл','Кызыл','Сары']},{q:'Чөп кандай түстө?',a:'Жашыл',o:['Көк','Сары','Жашыл','Күрөң']}]
+};
+let _cPool,_cI,_cS,_cT=10;
+function startColor(){const p=(COL_Q[S.lang]||COL_Q.en).slice().sort(()=>Math.random()-.5);_cPool=p.slice(0,Math.min(_cT,p.length));_cI=0;_cS=0;showColor();}
+function showColor(){
+  const el=G();if(!el)return;
+  if(_cI>=_cPool.length){addProg('sci',10);showResult(_cS>=7?'🏆':_cS>=4?'🌟':'💪',_cS,_cPool.length,Math.max(1,Math.floor(_cS/2)),startColor);return;}
+  const q=_cPool[_cI];const opts=[...q.o].sort(()=>Math.random()-.5);
+  el.innerHTML=`<h2>🎨 ${S.lang==='ru'?'Цвета':S.lang==='ky'?'Түстөр':'Colour Quiz'} <span style="font-size:.8rem;color:var(--grey)">${_cI+1}/${_cPool.length}</span></h2>
+    <div class="q-bar"><div class="q-fill" style="width:${_cI/_cPool.length*100}%"></div></div>
+    <div class="q-text">🎨 ${q.q}</div>
+    <div class="q-opts">${opts.map(o=>`<button class="q-opt" onclick="ansColor(this,'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}')">${o}</button>`).join('')}</div>`;
+}
+function ansColor(btn,sel,correct){
+  if(btn.disabled)return;G().querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  const ok=sel===correct;btn.classList.add(ok?'right':'wrong');
+  if(!ok)G().querySelectorAll('.q-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('right');});
+  if(ok)_cS++;beep(ok?'correct':'wrong');_cI++;setTimeout(showColor,1300);
+}
+
+// ─── FAST MATHS TIMER ─────────────────────────────────────────
+let _fmI,_fmS,_fmT=15,_fmTime,_fmTimer;
+function startFastMath(){_fmI=0;_fmS=0;_fmTime=30;clearInterval(_fmTimer);
+  _fmTimer=setInterval(()=>{_fmTime--;
+    const el=document.getElementById('fm-timer');if(el)el.textContent=_fmTime+'s';
+    if(_fmTime<=0){clearInterval(_fmTimer);endFastMath();}
+  },1000);
+  showFastMath();
+}
+function showFastMath(){
+  const el=G();if(!el)return;
+  if(_fmI>=_fmT){clearInterval(_fmTimer);endFastMath();return;}
+  const ops=['+','-'];const op=ops[Math.floor(Math.random()*2)];
+  let a,b,ans;
+  if(op==='+'){a=Math.floor(Math.random()*20)+1;b=Math.floor(Math.random()*20)+1;ans=a+b;}
+  else{a=Math.floor(Math.random()*30)+10;b=Math.floor(Math.random()*a)+1;ans=a-b;}
+  const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*8)-4;if(w>=0&&w!==ans)wr.add(w);}
+  const opts=[ans,...wr].sort(()=>Math.random()-.5);
+  el.innerHTML=`<h2>⚡ ${S.lang==='ru'?'Быстрая математика':S.lang==='ky'?'Тез математика':'Fast Maths!'} <span id="fm-timer" style="font-size:.9rem;color:var(--red);font-weight:700">${_fmTime}s</span></h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="q-bar" style="flex:1;margin:0 10px 0 0"><div class="q-fill" style="width:${_fmI/_fmT*100}%"></div></div>
+      <span style="font-size:.84rem;color:var(--grey);white-space:nowrap">${_fmS} ${S.lang==='ru'?'верно':S.lang==='ky'?'туура':'correct'}</span>
+    </div>
+    <div class="big-eq" style="font-size:2.5rem">${a} ${op} ${b} = ?</div>
+    <div class="ag">${opts.map(o=>`<button class="ab" onclick="ansFM(this,${o},${ans})" style="font-size:1.4rem">${o}</button>`).join('')}</div>`;
+}
+function ansFM(btn,sel,ans){
+  if(btn.disabled)return;G().querySelectorAll('.ab').forEach(b=>b.disabled=true);
+  const ok=sel===ans;btn.classList.add(ok?'right':'wrong');
+  if(ok){_fmS++;beep('correct');}else{beep('wrong');}
+  _fmI++;setTimeout(showFastMath,600);
+}
+function endFastMath(){
+  clearInterval(_fmTimer);
+  const stars=Math.max(1,Math.floor(_fmS/2));addStars(stars);addProg('math',15);
+  const el=G();if(!el)return;
+  el.innerHTML=`<div class="result"><span class="r-emo">${_fmS>=12?'🏆':_fmS>=8?'🌟':_fmS>=5?'💪':'😅'}</span><div class="r-sc">${_fmS}/${_fmT}</div><div style="color:var(--grey);font-size:.9rem;margin-bottom:4px">+${stars} ⭐ · 30${S.lang==='ru'?' секунд':S.lang==='ky'?' секунд':' seconds'}</div><button class="play-again" onclick="startFastMath()">${T('play-again')}</button></div>`;
+}
+
+// ─── NUMBER PATTERN ───────────────────────────────────────────
+function makePattern(){
+  const types=[
+    ()=>{const s=Math.floor(Math.random()*5)+1,d=Math.floor(Math.random()*5)+2;const seq=[s,s+d,s+2*d,s+3*d];const ans=s+4*d;const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*8)-4;if(w>0&&w!==ans)wr.add(w);}return{seq,ans,opts:[ans,...wr].sort(()=>Math.random()-.5),type:'+'+d};},
+    ()=>{const s=Math.floor(Math.random()*3)+2,m=Math.floor(Math.random()*2)+2;const seq=[s,s*m,s*m*m,s*m*m*m];const ans=s*Math.pow(m,4);const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*20)-10;if(w>0&&w!==ans&&w<500)wr.add(w);}return{seq,ans,opts:[ans,...wr].sort(()=>Math.random()-.5),type:'x'+m};},
+    ()=>{const start=Math.floor(Math.random()*50)+20,d=Math.floor(Math.random()*5)+2;const seq=[start,start-d,start-2*d,start-3*d];const ans=start-4*d;if(ans<0)return makePattern();const wr=new Set();while(wr.size<3){const w=ans+Math.floor(Math.random()*8)-4;if(w>=0&&w!==ans)wr.add(w);}return{seq,ans,opts:[ans,...wr].sort(()=>Math.random()-.5),type:'-'+d};}
+  ];
+  return types[Math.floor(Math.random()*types.length)]();
+}
+let _ptData,_ptI,_ptS,_ptT=8;
+function startPattern(){_ptI=0;_ptS=0;_ptData=makePattern();showPattern();}
+function showPattern(){
+  const el=G();if(!el)return;
+  if(_ptI>=_ptT){addProg('math',12);showResult(_ptS>=6?'🏆':_ptS>=4?'🌟':'💪',_ptS,_ptT,Math.max(1,Math.floor(_ptS/2)),startPattern);return;}
+  _ptData=makePattern();
+  el.innerHTML=`<h2>🧩 ${S.lang==='ru'?'Что дальше?':S.lang==='ky'?'Андан кийин эмне?':'Number Pattern'} <span style="font-size:.8rem;color:var(--grey)">${_ptI+1}/${_ptT}</span></h2>
+    <div class="q-bar"><div class="q-fill" style="width:${_ptI/_ptT*100}%"></div></div>
+    <div style="display:flex;justify-content:center;align-items:center;gap:8px;padding:16px;background:#f8f9ff;border-radius:12px;margin:10px 0;flex-wrap:wrap">
+      ${_ptData.seq.map(n=>`<div style="min-width:44px;height:44px;background:#fff;border:2px solid var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:var(--blue)">${n}</div>`).join('<div style="font-size:1.5rem;color:var(--grey)">→</div>')}
+      <div style="font-size:1.5rem;color:var(--grey)">→</div>
+      <div style="min-width:44px;height:44px;background:#e8f0fe;border:2px dashed var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--grey)">?</div>
+    </div>
+    <div class="ag">${_ptData.opts.map(o=>`<button class="ab" onclick="ansPat(this,${o},${_ptData.ans})">${o}</button>`).join('')}</div>`;
+}
+function ansPat(btn,sel,ans){
+  if(btn.disabled)return;G().querySelectorAll('.ab').forEach(b=>b.disabled=true);
+  const ok=sel===ans;btn.classList.add(ok?'right':'wrong');
+  if(!ok)G().querySelectorAll('.ab').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('right');});
+  if(ok)_ptS++;beep(ok?'correct':'wrong');_ptI++;setTimeout(showPattern,1300);
+}
+
+// ─── ADMIN PRANK HANDLERS ─────────────────────────────────────
+function showConfetti(){
+  document.getElementById('live-ov').classList.remove('on');
+  const colors=['#ff0000','#00cc00','#0066ff','#ffcc00','#ff00cc','#00ccff','#ff6600','#9900cc'];
+  const cont=document.createElement('div');
+  cont.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:3000;overflow:hidden';
+  if(!document.getElementById('cstyle')){const st=document.createElement('style');st.id='cstyle';st.textContent='@keyframes cfalli{to{transform:translateY(115vh) rotate(720deg);opacity:0}}';document.head.appendChild(st);}
+  for(let i=0;i<120;i++){const p=document.createElement('div');const c=colors[Math.floor(Math.random()*colors.length)];const sz=Math.random()*10+5;p.style.cssText=`position:absolute;width:${sz}px;height:${sz}px;background:${c};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:-20px;animation:cfalli ${Math.random()*2+1.5}s linear ${Math.random()*1.5}s forwards`;cont.appendChild(p);}
+  document.body.appendChild(cont);setTimeout(()=>cont.remove(),6000);
+}
+function doShake(){
+  document.getElementById('live-ov').classList.remove('on');
+  if(!document.getElementById('shkstyle')){const st=document.createElement('style');st.id='shkstyle';st.textContent='@keyframes shk{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-12px)}20%,40%,60%,80%{transform:translateX(12px)}}';document.head.appendChild(st);}
+  document.body.style.animation='shk 0.4s ease 0s 7';setTimeout(()=>document.body.style.animation='',3000);
+}
+function doRainbow(){
+  document.getElementById('live-ov').classList.remove('on');
+  const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:2500;pointer-events:none';
+  if(!document.getElementById('rbstyle')){const st=document.createElement('style');st.id='rbstyle';st.textContent='@keyframes rb{0%{background:rgba(255,0,0,.35)}16%{background:rgba(255,165,0,.35)}33%{background:rgba(255,255,0,.35)}50%{background:rgba(0,255,0,.35)}66%{background:rgba(0,0,255,.35)}83%{background:rgba(138,43,226,.35)}100%{background:rgba(255,0,0,.35)}}';document.head.appendChild(st);}
+  ov.style.animation='rb 0.4s infinite';document.body.appendChild(ov);setTimeout(()=>ov.remove(),6000);
+}
+function showQuiet(){
+  document.getElementById('live-ov').classList.remove('on');
+  const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer';
+  ov.innerHTML='<div style="font-size:10rem;animation:pulse 1s infinite">🤫</div><div style="font-size:3rem;font-weight:700;color:#fff;margin-top:10px">SHHH!</div><div style="color:rgba(255,255,255,.7);margin-top:8px;font-size:1rem">'+(S.lang==='ru'?'Тихо! Учитель говорит!':S.lang==='ky'?'Тынч! Мугалим сүйлөйт!':'Quiet! Teacher is speaking!')+'</div><div style="color:rgba(255,255,255,.5);margin-top:16px;font-size:.8rem">Tap to dismiss</div>';
+  if(!document.getElementById('pulsestyle')){const st=document.createElement('style');st.id='pulsestyle';st.textContent='@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}';document.head.appendChild(st);}
+  ov.onclick=()=>ov.remove();document.body.appendChild(ov);setTimeout(()=>ov.remove(),10000);
+}
+function doEmojiRain(){
+  document.getElementById('live-ov').classList.remove('on');
+  const emojis=['🎉','⭐','🌟','🎊','💫','✨','🎈','🥳','🎁','🎀','🌈','❤️','💚','💙','💜','🔥','🏔️','🌙','☀️','🦋'];
+  const cont=document.createElement('div');cont.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:3000;overflow:hidden';
+  if(!document.getElementById('rainstyle')){const st=document.createElement('style');st.id='rainstyle';st.textContent='@keyframes rfall{to{transform:translateY(115vh);opacity:0}}';document.head.appendChild(st);}
+  for(let i=0;i<50;i++){const e=document.createElement('div');const sz=Math.random()*2+1.5;e.style.cssText=`position:absolute;font-size:${sz}rem;left:${Math.random()*100}%;top:-60px;animation:rfall ${Math.random()*3+2}s linear ${Math.random()*3}s forwards`;e.textContent=emojis[Math.floor(Math.random()*emojis.length)];cont.appendChild(e);}
+  document.body.appendChild(cont);setTimeout(()=>cont.remove(),9000);
+}
+function showBomb(msg){
+  document.getElementById('live-ov').classList.remove('on');
+  const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:2500;background:rgba(220,40,0,.92);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer';
+  if(!document.getElementById('bombstyle')){const st=document.createElement('style');st.id='bombstyle';st.textContent='@keyframes bombin{from{transform:scale(0) rotate(-180deg)}to{transform:scale(1) rotate(0)}}';document.head.appendChild(st);}
+  ov.innerHTML=`<div style="font-size:8rem;animation:bombin .4s cubic-bezier(.34,1.56,.64,1)">💥</div><div style="font-size:2.2rem;font-weight:700;color:#fff;text-align:center;padding:0 20px;text-shadow:0 2px 10px rgba(0,0,0,.3);margin-top:10px">${msg||'SURPRISE! 😱'}</div><div style="color:rgba(255,255,255,.75);margin-top:16px;font-size:.9rem">Tap anywhere to dismiss</div>`;
+  ov.onclick=()=>ov.remove();document.body.appendChild(ov);beep('wrong');setTimeout(()=>ov.remove(),7000);
+}
+function showKyrgyz(msg){
+  document.getElementById('live-ov').classList.remove('on');
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:2500;background:linear-gradient(180deg,#1565c0 0%,#42a5f5 20%,#e3f2fd 40%,#fffde7 48%,#a5d6a7 58%,#2e7d32 78%,#1b5e20 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer';
+  ov.innerHTML=`<div style="font-size:6rem;text-shadow:0 4px 20px rgba(0,0,0,.3)">🏔️</div><div style="font-size:1.8rem;font-weight:700;color:#fff;text-align:center;padding:16px 24px;background:rgba(0,0,0,.3);border-radius:12px;margin-top:12px;max-width:340px;text-shadow:0 2px 8px rgba(0,0,0,.5)">${msg||'Ала-Тоо тоолору — Кыргызстандын сыймыгы! 🏔️❤️'}</div><div style="color:rgba(255,255,255,.8);margin-top:14px;font-size:.9rem">🇰🇬 Кыргызстан</div><div style="color:rgba(255,255,255,.6);margin-top:8px;font-size:.8rem">Tap to close</div>`;
+  ov.onclick=()=>ov.remove();document.body.appendChild(ov);setTimeout(()=>ov.remove(),10000);
+}
+function doFreeze(){
+  document.getElementById('live-ov').classList.remove('on');
+  const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:2500;background:rgba(0,150,255,.25);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:all';
+  let countdown=5;
+  const update=()=>{ov.innerHTML=`<div style="font-size:7rem">🧊</div><div style="font-size:3rem;font-weight:700;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5)">${countdown}</div><div style="color:rgba(255,255,255,.8);font-size:1rem;margin-top:8px">${S.lang==='ru'?'Заморожен!':S.lang==='ky'?'Тоңдурулду!':'FROZEN!'}</div>`;};
+  update();document.body.appendChild(ov);
+  const t=setInterval(()=>{countdown--;update();if(countdown<=0){clearInterval(t);ov.remove();}},1000);
+}
+
+function buildLang(){
+  const el=document.getElementById('lang-wrap');if(!el)return;
+  const w=WDATA[_lcI];const show=_lcF?(_lcM==='en2ru'?w.ru:w.en):(_lcM==='en2ru'?w.en:w.ru);
+  const correct=_lcM==='en2ru'?w.ru:w.en;
+  const others=WDATA.filter((_,i)=>i!==_lcI).sort(()=>Math.random()-.5).slice(0,3).map(x=>_lcM==='en2ru'?x.ru:x.en);
+  const opts=[correct,...others].sort(()=>Math.random()-.5);const isRU=S.lang==='ru';
+  el.innerHTML=`<div class="lang-sw"><button class="${_lcM==='en2ru'?'on':''}" onclick="setLcM('en2ru')">🇬🇧 ${isRU?'Учи английский':'Learn English'}</button><button class="${_lcM==='ru2en'?'on':''}" onclick="setLcM('ru2en')">🇷🇺 ${isRU?'Учи русский':'Learn Russian'}</button></div>
+  <div class="fc" onclick="lcFlip()"><div style="font-size:3.5rem;margin-bottom:10px">${w.e}</div>${_lcF?`<div style="font-size:.95rem;color:var(--grey);margin-bottom:4px">${_lcM==='en2ru'?w.en:w.ru}</div>`:''}<div style="font-size:1.5rem;font-weight:700;color:${_lcF?'var(--green)':'var(--text)'};margin-bottom:5px">${show}</div><div style="font-size:.82rem;color:var(--grey)">${_lcF?(isRU?'Нажми чтобы скрыть':'Tap to hide'):(isRU?'Нажми для перевода 👆':'Tap to see translation 👆')}</div></div>
+  <div class="fc-nav"><button onclick="lcPrev()">← ${isRU?'Назад':'Back'}</button><span class="fc-cnt">${_lcI+1} / ${WDATA.length}</span><button onclick="lcNext()">${isRU?'Вперёд':'Next'} →</button></div>
+  <div class="lq"><div class="lq-ttl">🎯 ${isRU?'Мини-квиз: что это?':'Mini Quiz: what does this mean?'} ${w.e}</div><div id="lq-opts">${opts.map(o=>`<button class="lq-opt" onclick="ansLC(this,'${o.replace(/'/g,"\\'")}','${correct.replace(/'/g,"\\'")}',${_lcI})">${o}</button>`).join('')}</div></div>
+  <div style="background:#e8f0fe;border-radius:8px;padding:12px;font-size:.84rem;color:#174ea6;margin-top:12px">💡 ${isRU?'Учи каждый день и зарабатывай звёзды!':'Study every day and earn stars!'}</div>`;
+}
+function setLcM(m){_lcM=m;_lcF=false;buildLang();}
+function lcFlip(){_lcF=!_lcF;buildLang();if(_lcF)beep('correct');}
+function lcNext(){_lcI=(_lcI+1)%WDATA.length;_lcF=false;buildLang();}
+function lcPrev(){_lcI=(_lcI-1+WDATA.length)%WDATA.length;_lcF=false;buildLang();}
+function ansLC(btn,sel,correct,idx){if(btn.disabled||idx!==_lcI)return;document.querySelectorAll('#lq-opts .lq-opt').forEach(b=>b.disabled=true);const ok=sel===correct;btn.classList.add(ok?'right':'wrong');if(!ok)document.querySelectorAll('#lq-opts .lq-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('right');});if(ok){_lcS++;addProg('lang',3);if(_lcS%3===0)addStars(1);beep('correct');}else beep('wrong');setTimeout(lcNext,1300);}
+function buildHPSec(students,myHP){const el=document.getElementById('hp-sec');if(!el)return;const sorted=[...students].sort((a,b)=>(b.hp||0)-(a.hp||0)).slice(0,5);if(!sorted.length)return;const medals=['🥇','🥈','🥉'];el.innerHTML=`<div class="me-card" style="margin-bottom:10px"><div class="me-ttl">${S.lang==='ru'?'🏆 Очки дома':'🏆 House Points'}</div><div style="background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:8px;padding:12px;text-align:center;color:#fff;margin-bottom:10px"><div style="font-size:.8rem;opacity:.85;margin-bottom:2px">${S.lang==='ru'?'Ваши очки':'Your HP'}</div><div style="font-size:2.5rem;font-weight:700;color:#FFD54F">${myHP}</div><div style="font-size:.75rem;opacity:.8">House Points</div></div>${sorted.map((s,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f5f5"><span style="font-size:1rem;width:24px">${medals[i]||'#'+(i+1)}</span><span style="font-size:.875rem;font-weight:${s.name===S.name?'700':'400'};color:${s.name===S.name?'var(--blue)':'var(--text)'};flex:1">${s.name}${s.name===S.name?' (you)':''}</span><span style="font-size:.82rem;font-weight:700;color:var(--orange)">🏆 ${s.hp||0}</span></div>`).join('')}</div>`;}
+function buildMe(){
+  const el=document.getElementById('me-wrap');if(!el)return;
+  const emojis=['😄','🌟','🎉','🌈','🦋','🚀'];
+  el.innerHTML=`<div class="me-hdr"><div class="me-av">${emojis[Math.floor(Math.random()*emojis.length)]}</div><div class="me-n">${S.name}</div><div class="me-s">⭐ ${S.stars} ${T('stars')}</div><div class="stars-grid">${Array(Math.min(S.stars,20)).fill('⭐').join('')}${S.stars>20?`<span style="font-size:.8rem;font-weight:700;color:var(--grey)"> +${S.stars-20}</span>`:''}</div></div>
+  <div id="hp-sec"></div>
+  <div class="me-card"><div class="me-ttl">${S.lang==='ru'?'📊 Мой прогресс':'📊 My Progress'}</div>${[['math','🔢',S.lang==='ru'?'Математика':'Maths','#1a73e8'],['read','📖',S.lang==='ru'?'Чтение':'Reading','#0f9d58'],['sci','🔬',S.lang==='ru'?'Наука':'Science','#7b1fa2'],['quiz','❓',S.lang==='ru'?'Квиз':'Quiz','#e65100'],['mem','🎴',S.lang==='ru'?'Память':'Memory','#d93025'],['lang','🌍',S.lang==='ru'?'Язык':'Language','#00695c']].map(([cat,icon,label,col])=>`<div class="pi"><div class="pl"><span>${icon} ${label}</span><span>${S.prog[cat]||0}%</span></div><div class="pb"><div class="pf" style="width:${S.prog[cat]||0}%;background:${col}"></div></div></div>`).join('')}</div>
+  <div class="me-card"><div class="me-ttl">${S.lang==='ru'?'⚙️ Настройки':'⚙️ Settings'}</div><div class="set-row"><div><div class="set-lbl">${S.lang==='ru'?'Моё имя':'My Name'}</div><div class="set-val">${S.name}</div></div><button class="set-btn" onclick="chName()">Change</button></div><div class="set-row"><div><div class="set-lbl">${S.lang==='ru'?'Язык':'Language'}</div><div class="set-val">${S.lang==='en'?'🇬🇧 English':'🇷🇺 Русский'}</div></div><button class="set-btn" onclick="chLang()">Change</button></div><div class="set-row"><div class="set-lbl">${S.lang==='ru'?'Сбросить прогресс':'Reset Progress'}</div><button class="set-btn" style="border-color:var(--red);color:var(--red)" onclick="resetAll()">Reset</button></div></div>`;
+}
+function chName(){const n=prompt(S.lang==='ru'?'Твоё имя:':'Your name:',S.name);if(n&&n.trim()){S.name=n.trim();sv();buildMe();const sn=document.getElementById('sb-name');if(sn)sn.textContent=S.name;const sa=document.getElementById('sb-av');if(sa)sa.textContent=S.name.slice(0,2).toUpperCase();}}
+function chLang(){S.lang=S.lang==='en'?'ru':'en';sv();applyTr();buildMe();buildLang();}
+function resetAll(){if(confirm(S.lang==='ru'?'Сбросить весь прогресс?':'Reset all progress?')){S.stars=0;S.prog={math:0,read:0,sci:0,quiz:0,mem:0,lang:0};sv();document.getElementById('star-num').textContent=0;buildMe();}}
+function doDisco(){const yt=document.createElement('iframe');yt.src='https://www.youtube.com/embed/npjF032TDDQ?autoplay=1';yt.allow='autoplay;encrypted-media';yt.style.cssText='position:fixed;bottom:-200px;left:0;width:2px;height:2px;opacity:0;pointer-events:none;border:none';document.body.appendChild(yt);const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;pointer-events:none;animation:dbg .5s infinite';ov.innerHTML='<div style="font-size:7rem;animation:dspin .5s linear infinite">🪩</div><div style="font-size:1.6rem;font-weight:700;color:#fff;text-shadow:0 0 20px #fff">DISCO! 🕺</div><div style="font-size:1rem;color:rgba(255,255,255,.9)">🌮 Raining Tacos!</div>';if(!document.getElementById('disco-css')){const st=document.createElement('style');st.id='disco-css';st.textContent='@keyframes dspin{to{transform:rotate(360deg)}}@keyframes dbg{0%{background:rgba(255,0,0,.6)}16%{background:rgba(255,127,0,.6)}33%{background:rgba(255,255,0,.6)}50%{background:rgba(0,200,0,.6)}66%{background:rgba(0,0,255,.6)}83%{background:rgba(150,0,210,.6)}100%{background:rgba(255,0,0,.6)}}';document.head.appendChild(st);}document.body.appendChild(ov);setTimeout(()=>{ov.remove();yt.remove();},9000);}
+let _evAns=false;
+function showEvent(ev){const ov=document.getElementById('live-ov');const hdr=document.getElementById('lv-hdr');const body=document.getElementById('lv-body');_evAns=false;ov.classList.add('on');if(ev.type==='rickroll'){hdr.style.background='#c62828';document.getElementById('lv-title').textContent='🎵 You got Rickrolled!';body.innerHTML=`<iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" allow="autoplay;encrypted-media" allowfullscreen style="border:none;border-radius:8px;display:block"></iframe><p style="color:var(--grey);margin-top:10px;font-size:.84rem;text-align:center">Never gonna give you up... 😂</p><button onclick="document.getElementById('live-ov').classList.remove('on')" style="width:100%;margin-top:10px;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.875rem;font-weight:500">OK 😂</button>`;return;}
+const d=ev.data||{};const colors={quiz_battle:'#e65100',star_sprint:'#7b1fa2',football:'#2e7d32'};hdr.style.background=colors[ev.type]||'#1a73e8';document.getElementById('lv-title').textContent=ev.title||'Live Event';
+if(ev.type==='quiz_battle'){const opts=d.options||{};body.innerHTML=`<div style="font-size:.9rem;font-weight:500;padding:11px;background:#f8f9ff;border-radius:8px;margin-bottom:12px">${d.question||'Answer!'}</div>${Object.entries(opts).map(([k,v])=>`<button class="le-opt" onclick="ansEv('${ev.id}','${v.replace(/'/g,"\\'")}',this)">${k}: ${v}</button>`).join('')}<div style="font-size:.78rem;color:var(--grey);text-align:center;margin-top:6px">⚡ First correct = bonus stars!</div>`;return;}
+if(ev.type==='football'){const opts=d.options||{A:(d.teamA||'Team A')+' wins',B:(d.teamB||'Team B')+' wins',C:'Draw'};body.innerHTML=`<div style="font-size:.84rem;color:var(--grey);text-align:center;margin-bottom:10px">${S.lang==='ru'?'Кто победит?':'Who wins?'}</div>${Object.entries(opts).map(([k,v])=>`<button class="le-opt" onclick="ansEv('${ev.id}','${v.replace(/'/g,"\\'")}',this)">${k==='A'?'⚽':k==='B'?'🥅':'🤝'} ${v}</button>`).join('')}`;return;}
+if(ev.type==='star_sprint'){body.innerHTML=`<div style="text-align:center;padding:10px"><div style="font-size:3rem;margin-bottom:8px">⭐</div><div style="font-size:1rem;font-weight:500;margin-bottom:8px">${ev.title}</div><button onclick="document.getElementById('live-ov').classList.remove('on');openGame('quiz')" style="width:100%;padding:12px;background:var(--purple);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.9rem;font-weight:600;margin-top:8px">🎮 Play Now!</button></div>`;return;}
+  if(ev.type==='confetti'){ov.classList.remove('on');showConfetti();return;}
+  if(ev.type==='shake'){ov.classList.remove('on');doShake();return;}
+  if(ev.type==='rainbow'){ov.classList.remove('on');doRainbow();return;}
+  if(ev.type==='quiet'){ov.classList.remove('on');showQuiet();return;}
+  if(ev.type==='party'){ov.classList.remove('on');doEmojiRain();return;}
+  if(ev.type==='bomb'){ov.classList.remove('on');showBomb((ev.data&&ev.data.msg)||'SURPRISE!');return;}
+  if(ev.type==='kyrgyz'){ov.classList.remove('on');showKyrgyz(ev.data&&ev.data.msg);return;}
+  if(ev.type==='freeze'){ov.classList.remove('on');doFreeze();return;}
+  body.innerHTML=`<p style="color:var(--grey);text-align:center;padding:10px">${ev.title}</p><button onclick="document.getElementById('live-ov').classList.remove('on')" style="width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:4px;cursor:pointer">OK</button>`;}
+async function ansEv(evId,answer,btn){if(_evAns)return;_evAns=true;document.querySelectorAll('.le-opt').forEach(b=>b.disabled=true);btn.classList.add('picked');try{const res=await fetch(`/api/rooms/${S.room}/events/${evId}/answer`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student:S.name,answer})});const d=await res.json();if(d.correct===true){btn.classList.add('right');if(d.stars)addStars(d.stars);beep('correct');const r=document.createElement('div');r.style.cssText='text-align:center;padding:10px;background:#e6f4ea;border-radius:8px;margin-top:8px';r.innerHTML=`<div style="font-size:1.5rem">✅</div><div style="font-weight:600;color:var(--green)">Correct! +${d.stars||0} ⭐</div>`;document.getElementById('lv-body').appendChild(r);}else if(d.correct===false){btn.classList.add('wrong');beep('wrong');const r=document.createElement('div');r.style.cssText='text-align:center;padding:10px;background:#fce8e6;border-radius:8px;margin-top:8px';r.innerHTML='<div style="font-size:1.5rem">❌</div><div style="font-weight:600;color:var(--red)">Not quite!</div>';document.getElementById('lv-body').appendChild(r);}else{const r=document.createElement('div');r.style.cssText='text-align:center;padding:10px;background:#e8f0fe;border-radius:8px;margin-top:8px';r.innerHTML=`<div style="font-size:1.5rem">✅</div><div style="font-weight:600;color:var(--blue)">${S.lang==='ru'?'Принято!':'Locked in!'}</div>`;document.getElementById('lv-body').appendChild(r);}}catch(e){}setTimeout(()=>{document.getElementById('live-ov').classList.remove('on');_evAns=false;},3000);}
+const TUT=[{i:'🌟',en:['Welcome to BrightMind!','Your fun learning app! Games, homework, language learning and stars!'],ru:['Добро пожаловать!','Твоё приложение для учёбы! Игры, задания, языки и звёзды!']},{i:'🏠',en:['Stream — Your Home','See homework from your teacher here. Tap any card to open it!'],ru:['Лента — Твой дом','Здесь задания учителя. Нажми на карточку чтобы открыть!']},{i:'🎮',en:['11 Games!','Quiz, Maths, Memory Cards, Spelling, Geography, Animal Facts and more!'],ru:['11 игр!','Квиз, математика, карточки, орфография, география и многое другое!']},{i:'🌍',en:['Language Lab','Russian? Learn English! English? Learn Russian!'],ru:['Языковая лаборатория','Говоришь по-русски? Учи английский!']},{i:'⭐',en:['Earn Stars & HP!','Games earn ⭐ stars. Good homework earns 🏆 HP!'],ru:['Зарабатывай звёзды!','Игры дают ⭐ звёзды. Хорошие задания дают 🏆 HP!']}];
+let _tutStep=0;
+function renderTut(){const s=TUT[_tutStep];const l=S.lang==='ru'?'ru':'en';const id=i=>document.getElementById(i);if(id('tut-ico'))id('tut-ico').textContent=s.i;if(id('tut-ttl'))id('tut-ttl').textContent=s[l][0];if(id('tut-txt'))id('tut-txt').textContent=s[l][1];const isLast=_tutStep===TUT.length-1;if(id('tut-next'))id('tut-next').textContent=isLast?(S.lang==='ru'?'Поехали! 🚀':"Let's go! 🚀"):(S.lang==='ru'?'Далее →':'Next →');if(id('tut-skip'))id('tut-skip').textContent=S.lang==='ru'?'Пропустить':'Skip';const dots=id('tut-dots');if(dots)dots.innerHTML=TUT.map((_,i)=>`<div class="tut-dot ${i===_tutStep?'on':''}"></div>`).join('');}
+function nextTut(){if(_tutStep<TUT.length-1){_tutStep++;renderTut();}else closeTut();}
+function closeTut(){document.getElementById('tut').classList.remove('on');localStorage.setItem('bm_tut','1');}
+let _actx=null;
+function getCtx(){if(!_actx)try{_actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}return _actx;}
+function beep(type){const ctx=getCtx();if(!ctx)return;const t={correct:[[523,.1,.2],[659,.1,.25,.1],[784,.15,.3,.2]],wrong:[[300,.1,.2],[250,.1,.2,.1]],star:[[523,.1,.15],[659,.1,.15,.1],[784,.1,.2,.2],[1047,.12,.3,.35]],flip:[[400,.06,.12]],click:[[600,.05,.08]]};(t[type]||[]).forEach(([f,v,d,dl=0])=>{try{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(v,ctx.currentTime+dl);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dl+d);o.start(ctx.currentTime+dl);o.stop(ctx.currentTime+dl+d+0.05);}catch(e){}});}
+window.addEventListener('DOMContentLoaded',()=>{
+  const urlRoom=new URLSearchParams(window.location.search).get('room');
+  if(urlRoom){S.room=urlRoom;sv();}
+  if(S.lang&&S.name){
+    document.getElementById('splash').style.display='none';
+    applyTr();startApp();
+    if(S.room&&!S.rooms.find(r=>r.code===S.room)){
+      fetch('/api/rooms/'+S.room).then(r=>r.json()).then(d=>{if(d.ok){addRoom(S.room,d.room.name,d.room.color);switchRoom(S.room);}}).catch(()=>{});
+    }else if(S.room){switchRoom(S.room);}
+  }else if(S.lang&&!S.name){
+    document.getElementById('splash').style.display='none';applyTr();showSc('sc-name');setTimeout(()=>document.getElementById('name-inp').focus(),100);
+  }
+  if(!localStorage.getItem('bm_tut')){}else{document.getElementById('tut').classList.remove('on');}
+});
+
+</script>
+</body>
+</html>
